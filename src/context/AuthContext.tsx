@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import { useAuth, UserProfile } from '../hooks/useAuth';
 import type { Session, User } from '@supabase/supabase-js';
 
@@ -25,7 +25,25 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const auth = useAuth();
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+
+  const value = useMemo<AuthContextValue>(
+    () => auth,
+    [
+      auth.session?.access_token,
+      auth.user?.id,
+      auth.profile?.id,
+      auth.profile?.displayName,
+      auth.profile?.avatarUrl,
+      auth.profile?.isAdmin,
+      auth.loading,
+      auth.profileSyncing,
+      auth.error,
+      auth.isAuthenticated,
+      auth.isAdmin,
+    ]
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuthContext() {

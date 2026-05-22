@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Provider, Session, User } from '@supabase/supabase-js';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
 import { getAuthErrorMessage } from '../lib/authErrors';
@@ -50,6 +50,18 @@ function buildProfileFromUser(authUser: User, row?: { email?: string; display_na
   };
 }
 
+function applyAuthSession(
+  newSession: Session | null,
+  setSession: (s: Session | null) => void,
+  setUser: (u: User | null) => void,
+  setProfile: (p: UserProfile | null) => void
+) {
+  setSession(newSession);
+  const authUser = newSession?.user ?? null;
+  setUser(authUser);
+  setProfile(authUser ? buildProfileFromUser(authUser) : null);
+}
+
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -57,8 +69,11 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
   const [profileSyncing, setProfileSyncing] = useState(false);
   const [error, setError] = useState<string | null>(() => getInitialAuthCallbackError());
+  const syncInFlightRef = useRef<string | null>(null);
 
   const syncProfile = useCallback(async (authUser: User) => {
+    if (syncInFlightRef.current === authUser.id) return;
+    syncInFlightRef.current = authUser.id;
     setProfileSyncing(true);
     try {
       await ensureUserProfile(authUser);
@@ -80,6 +95,7 @@ export function useAuth() {
       setProfile(buildProfileFromUser(authUser));
     } finally {
       setProfileSyncing(false);
+      syncInFlightRef.current = null;
     }
   }, []);
 
@@ -90,57 +106,68 @@ export function useAuth() {
     }
 
     const supabase = getSupabase();
+    let mounted = true;
 
-    const timeout = window.setTimeout(() => setLoading(false), 4000);
+    const finishLoading = () => {
+      if (mounted) setLoading(false);
+    };
+
+    const timeout = window.setTimeout(finishLoading, 5000);
+
+    const scheduleProfileSync = (authUser: User) => {
+      window.setTimeout(() => {
+        if (mounted) void syncProfile(authUser);
+      }, 0);
+    };
+
+    supabase.auth.getSession().then(({ data: { session: initialSession }, error: sessionError }) => {
+      if (!mounted) return;
+      if (sessionError) {
+        console.warn('[auth] getSession:', sessionError.message);
+      }
+      applyAuthSession(initialSession, setSession, setUser, setProfile);
+      if (initialSession?.user) {
+        scheduleProfileSync(initialSession.user);
+      }
+      finishLoading();
+      window.clearTimeout(timeout);
+    });
 
     const { data: listener } = supabase.auth.onAuthStateChange((event, newSession) => {
-      void (async () => {
-        setSession(newSession);
-        const authUser = newSession?.user ?? null;
-        setUser(authUser);
+      applyAuthSession(newSession, setSession, setUser, setProfile);
+      finishLoading();
+      window.clearTimeout(timeout);
 
-        if (authUser) {
-          setProfile(buildProfileFromUser(authUser));
+      const authUser = newSession?.user ?? null;
 
-          if (
-            event === 'INITIAL_SESSION' ||
-            event === 'SIGNED_IN' ||
-            event === 'TOKEN_REFRESHED' ||
-            event === 'USER_UPDATED'
-          ) {
-            await syncProfile(authUser);
-          }
-        } else if (event === 'SIGNED_OUT') {
-          setProfile(null);
+      if (authUser && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED')) {
+        scheduleProfileSync(authUser);
+      }
+
+      if (event === 'SIGNED_OUT') {
+        setProfile(null);
+        syncInFlightRef.current = null;
+      }
+
+      if (event === 'SIGNED_IN' && typeof window !== 'undefined') {
+        const urlError = parseAuthCallbackError();
+        if (urlError) {
+          setError(getAuthErrorMessage(urlError));
+          cleanAuthCallbackFromUrl();
         }
+      }
 
-        if (event === 'INITIAL_SESSION') {
-          window.clearTimeout(timeout);
-          setLoading(false);
-          if (typeof window !== 'undefined' && parseAuthCallbackError()) {
-            cleanAuthCallbackFromUrl();
-          }
+      if (event === 'PASSWORD_RECOVERY' && typeof window !== 'undefined') {
+        const path = window.location.pathname;
+        if (path !== resetPasswordPath()) {
+          window.history.replaceState(null, '', resetPasswordPath());
+          window.dispatchEvent(new PopStateEvent('popstate'));
         }
-
-        if (event === 'SIGNED_IN' && typeof window !== 'undefined') {
-          const urlError = parseAuthCallbackError();
-          if (urlError) {
-            setError(getAuthErrorMessage(urlError));
-            cleanAuthCallbackFromUrl();
-          }
-        }
-
-        if (event === 'PASSWORD_RECOVERY' && typeof window !== 'undefined') {
-          const path = window.location.pathname;
-          if (path !== resetPasswordPath()) {
-            window.history.replaceState(null, '', resetPasswordPath());
-            window.dispatchEvent(new PopStateEvent('popstate'));
-          }
-        }
-      })();
+      }
     });
 
     return () => {
+      mounted = false;
       window.clearTimeout(timeout);
       listener.subscription.unsubscribe();
     };
@@ -162,7 +189,12 @@ export function useAuth() {
       setError(message);
       throw new Error(message);
     }
-    if (data.user) await syncProfile(data.user);
+    if (data.session?.user) {
+      applyAuthSession(data.session, setSession, setUser, setProfile);
+      await syncProfile(data.session.user);
+    } else if (data.user) {
+      await syncProfile(data.user);
+    }
     return data;
   };
 
@@ -174,6 +206,9 @@ export function useAuth() {
       const message = getAuthErrorMessage(signInError);
       setError(message);
       throw new Error(message);
+    }
+    if (data.session) {
+      applyAuthSession(data.session, setSession, setUser, setProfile);
     }
     if (data.user) await syncProfile(data.user);
     return data;
@@ -232,10 +267,10 @@ export function useAuth() {
       setError(message);
       throw new Error(message);
     }
-    setSession(null);
-    setUser(null);
-    setProfile(null);
+    applyAuthSession(null, setSession, setUser, setProfile);
   };
+
+  const isAuthenticated = Boolean(session?.user);
 
   return {
     session,
@@ -244,7 +279,7 @@ export function useAuth() {
     loading,
     profileSyncing,
     error,
-    isAuthenticated: Boolean(session?.user ?? user),
+    isAuthenticated,
     isAdmin: profile?.isAdmin ?? false,
     signUp,
     signIn,

@@ -116,16 +116,11 @@ export function Navbar({
                 <LucideIcon name="LayoutDashboard" className="w-4 h-4" />
               </MagneticButton>
             )}
-            <UserMenu onOpenDashboard={handleDashboard} />
-            {!authLoading && !isAuthenticated && (
-              <MagneticButton variant="primary" strength={0.25} onClick={onOpenAuth} className="!text-xs !py-2 lg:hidden">
-                Sign in
-              </MagneticButton>
-            )}
+            <UserMenu onOpenDashboard={handleDashboard} onOpenAuth={onOpenAuth} />
           </div>
 
           <div className="flex items-center gap-2 sm:hidden shrink-0">
-            {!authLoading && isAuthenticated && <UserMenu onOpenDashboard={handleDashboard} />}
+            <UserMenu onOpenDashboard={handleDashboard} onOpenAuth={onOpenAuth} compact />
             <MagneticButton variant="cyan" strength={0.2} onClick={onOpenAIScout} className="!p-2">
               <LucideIcon name="Sparkles" className="w-4 h-4" />
             </MagneticButton>

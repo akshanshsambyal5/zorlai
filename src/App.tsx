@@ -533,6 +533,7 @@ export default function App() {
       <AIScout
         isOpen={isAIScoutOpen}
         onClose={() => setIsAIScoutOpen(false)}
+        tools={catalogTools}
         onSelectTool={(id) => {
           const matchingTool = allToolsForLookup.get(id);
           if (matchingTool) handleOpenToolPage(matchingTool);

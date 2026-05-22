@@ -9,7 +9,11 @@ export interface CatalogQuery {
   trending?: boolean;
 }
 
-function seedToTool(seed: ToolSeed): AITool {
+function seedToTool(seed: ToolSeed, index: number): AITool {
+  const daysAgo = (index * 3 + seed.id.length) % 120;
+  const addedAt = new Date(Date.now() - daysAgo * 86_400_000).toISOString();
+  const bookmarkSpread = (seed.id.charCodeAt(0) + seed.id.length * 7) % 40;
+
   return normalizeTool({
     id: seed.id,
     name: seed.name,
@@ -21,18 +25,18 @@ function seedToTool(seed: ToolSeed): AITool {
     category: seed.category_id,
     tags: seed.tags,
     votes: seed.votes,
-    bookmarks: Math.round(seed.votes * 0.35),
+    bookmarks: Math.max(5, Math.round(seed.votes * (0.15 + bookmarkSpread / 100))),
     pricing: seed.pricing,
     rating: seed.rating,
     reviewsCount: seed.reviews_count,
     isTrending: seed.is_trending,
     isFeatured: seed.is_featured,
-    addedAt: '2026-01-15T12:00:00Z',
+    addedAt,
     features: seed.features,
   });
 }
 
-const FALLBACK_TOOLS: AITool[] = TOOL_SEEDS.map(seedToTool);
+const FALLBACK_TOOLS: AITool[] = TOOL_SEEDS.map((seed, index) => seedToTool(seed, index));
 
 function filterFallbackTools(tools: AITool[], query: CatalogQuery = {}): AITool[] {
   let result = [...tools];

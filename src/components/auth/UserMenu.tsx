@@ -6,7 +6,10 @@ import { paths, loginPath, navigate } from '../../lib/router';
 
 interface UserMenuProps {
   onOpenDashboard?: () => void;
+  onOpenAuth?: () => void;
   className?: string;
+  /** Icon-only avatar on mobile navbar */
+  compact?: boolean;
 }
 
 function getInitials(name: string | null, email: string): string {
@@ -17,7 +20,7 @@ function getInitials(name: string | null, email: string): string {
   return email.slice(0, 2).toUpperCase();
 }
 
-export function UserMenu({ onOpenDashboard, className = '' }: UserMenuProps) {
+export function UserMenu({ onOpenDashboard, onOpenAuth, className = '', compact = false }: UserMenuProps) {
   const { user, profile, loading, profileSyncing, isAuthenticated, signOut } = useAuthContext();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -55,11 +58,11 @@ export function UserMenu({ onOpenDashboard, className = '' }: UserMenuProps) {
     return (
       <button
         type="button"
-        onClick={() => navigate(loginPath())}
-        className={`btn-primary text-white text-xs font-medium px-4 py-2 rounded-xl inline-flex items-center gap-2 ${className}`}
+        onClick={() => (onOpenAuth ? onOpenAuth() : navigate(loginPath()))}
+        className={`btn-primary text-white text-xs font-medium px-4 py-2 min-h-[40px] rounded-xl inline-flex items-center gap-2 touch-manipulation ${className}`}
       >
         <LucideIcon name="LogIn" className="w-3.5 h-3.5" />
-        Sign in
+        {!compact && <span>Sign in</span>}
       </button>
     );
   }
@@ -102,9 +105,11 @@ export function UserMenu({ onOpenDashboard, className = '' }: UserMenuProps) {
             {initials}
           </div>
         )}
-        <span className="text-xs font-medium text-slate-800 max-w-[100px] truncate hidden md:block">
-          {display.name}
-        </span>
+        {!compact && (
+          <span className="text-xs font-medium text-slate-800 max-w-[100px] truncate hidden md:block">
+            {display.name}
+          </span>
+        )}
         {profileSyncing ? (
           <LucideIcon name="Sparkles" className="w-3 h-3 text-sky-500 animate-spin hidden md:block" />
         ) : (

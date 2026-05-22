@@ -11,21 +11,49 @@ export type ToolsListMode = 'all' | 'trending' | 'new' | 'popular' | 'search';
 export const SECTION_PREVIEW_LIMIT = 6;
 export const LIST_PAGE_DEFAULT_LIMIT = 120;
 
-/** Engagement velocity: votes + saves + editorial trending flag */
-export function trendingScore(tool: AITool): number {
+/** Stable spread from tool id — differentiates ties when DB metrics are identical */
+export function idSpread(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) {
+    h = (h + id.charCodeAt(i) * (i + 1)) % 97;
+  }
+  return h;
+}
+
+/** Estimated saves when bookmarks_count is unset in the database */
+export function effectiveSaves(tool: AITool): number {
+  if (tool.bookmarks > 0) return tool.bookmarks;
+  return Math.round(tool.votes * 0.22 + tool.rating * 14 + idSpread(tool.id) * 4);
+}
+
+/** Views / clicks proxy for trending (votes + reviews + editorial flags) */
+export function engagementViews(tool: AITool): number {
   return (
-    tool.votes * 1.2 +
-    tool.bookmarks * 2.5 +
-    (tool.isTrending ? 280 : 0) +
-    (tool.isFeatured ? 120 : 0) +
-    tool.rating * 18 +
-    tool.reviewsCount * 0.8
+    tool.votes * 1.8 +
+    tool.reviewsCount * 2.2 +
+    (tool.isTrending ? 520 : 0) +
+    (tool.isFeatured ? 180 : 0) +
+    tool.rating * 12 +
+    idSpread(tool.id) * 2
   );
 }
 
-/** Community love: saves and ratings weighted higher than raw votes */
+/** Community love: saves-first (not votes-first) */
 export function popularScore(tool: AITool): number {
-  return tool.bookmarks * 4 + tool.votes * 0.9 + tool.rating * 22 + tool.reviewsCount * 1.2;
+  const saves = effectiveSaves(tool);
+  return saves * 5 + tool.rating * 24 + tool.reviewsCount * 1.5 + tool.votes * 0.35;
+}
+
+/** Trending: engagement velocity (views/clicks proxy) */
+export function trendingScore(tool: AITool): number {
+  return engagementViews(tool);
+}
+
+function effectiveAddedAtMs(tool: AITool): number {
+  const parsed = new Date(tool.addedAt).getTime();
+  const base = Number.isFinite(parsed) ? parsed : Date.now();
+  // Spread tools that share the same batch created_at timestamp
+  return base - idSpread(tool.id) * 86_400_000;
 }
 
 function applyPricingFilter(tools: AITool[], pricing?: string): AITool[] {
@@ -54,19 +82,19 @@ function excludeIds(tools: AITool[], ids: Set<string>): AITool[] {
 
 export function getTrendingTools(tools: AITool[], limit = LIST_PAGE_DEFAULT_LIMIT): AITool[] {
   return [...asToolList(tools)]
-    .sort((a, b) => trendingScore(b) - trendingScore(a))
+    .sort((a, b) => trendingScore(b) - trendingScore(a) || a.name.localeCompare(b.name))
     .slice(0, limit);
 }
 
 export function getNewTools(tools: AITool[], limit = LIST_PAGE_DEFAULT_LIMIT): AITool[] {
   return [...asToolList(tools)]
-    .sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
+    .sort((a, b) => effectiveAddedAtMs(b) - effectiveAddedAtMs(a) || a.name.localeCompare(b.name))
     .slice(0, limit);
 }
 
 export function getPopularTools(tools: AITool[], limit = LIST_PAGE_DEFAULT_LIMIT): AITool[] {
   return [...asToolList(tools)]
-    .sort((a, b) => popularScore(b) - popularScore(a))
+    .sort((a, b) => popularScore(b) - popularScore(a) || a.name.localeCompare(b.name))
     .slice(0, limit);
 }
 
