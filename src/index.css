@@ -13,6 +13,9 @@
   --color-accent-cyan: #38bdf8;
   --color-ink: #1d1d1f;
   --color-muted: #6e6e73;
+  --color-dark-slate: #0f172a;
+  --color-dark-elevated: #111827;
+  --color-dark-muted: #1e293b;
 }
 
 html {
@@ -76,6 +79,7 @@ body {
   box-shadow:
     0 0 0 1px rgba(56, 189, 248, 0.12) inset,
     0 16px 40px -14px rgba(14, 165, 233, 0.14),
+    0 4px 24px -8px rgba(15, 23, 42, 0.08),
     0 0 32px -12px rgba(56, 189, 248, 0.1);
 }
 
@@ -172,6 +176,20 @@ body {
   margin: 0 1.5rem;
 }
 
+.section-surface {
+  position: relative;
+}
+
+.section-surface::before {
+  content: '';
+  position: absolute;
+  inset: -8px 0;
+  background: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.02), transparent);
+  border-radius: 1.5rem;
+  pointer-events: none;
+  z-index: -1;
+}
+
 .section-fade-top {
   background: linear-gradient(180deg, transparent, rgba(245, 247, 250, 0.6));
 }
@@ -260,10 +278,57 @@ body {
 /* ─── Mesh background (light) ─── */
 .mesh-bg {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.2), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(14, 165, 233, 0.1), transparent),
-    radial-gradient(ellipse 50% 50% at 0% 50%, rgba(224, 242, 254, 0.8), transparent),
-    linear-gradient(180deg, #ffffff 0%, #f0f9ff 50%, #f8fbff 100%);
+    radial-gradient(ellipse 70% 45% at 50% -15%, rgba(56, 189, 248, 0.22), transparent),
+    radial-gradient(ellipse 50% 35% at 100% 10%, rgba(15, 23, 42, 0.06), transparent),
+    radial-gradient(ellipse 45% 40% at 0% 60%, rgba(30, 41, 59, 0.05), transparent),
+    radial-gradient(ellipse 60% 40% at 0% 50%, rgba(224, 242, 254, 0.75), transparent),
+    linear-gradient(180deg, #ffffff 0%, #f0f9ff 48%, #f8fbff 100%);
+}
+
+/* ─── Dark accent sections (light theme + depth) ─── */
+.section-dark-accent {
+  background: linear-gradient(145deg, #0f172a 0%, #111827 42%, #1e293b 100%);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 24px 48px -20px rgba(15, 23, 42, 0.55),
+    0 8px 24px -12px rgba(14, 165, 233, 0.12);
+}
+
+.dark-mesh-overlay {
+  background:
+    radial-gradient(ellipse 80% 60% at 0% 0%, rgba(14, 165, 233, 0.15), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(99, 102, 241, 0.12), transparent 50%);
+}
+
+.glass-on-dark {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease;
+}
+
+.glass-on-dark:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 8px 28px -8px rgba(14, 165, 233, 0.25);
+}
+
+.category-pill-card {
+  min-width: 9.5rem;
+  max-width: 10.5rem;
+  min-height: 4.5rem;
+}
+
+@media (min-width: 640px) {
+  .category-pill-card {
+    min-width: 10.25rem;
+  }
 }
 
 .grid-overlay {

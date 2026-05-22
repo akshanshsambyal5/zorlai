@@ -3,18 +3,20 @@ import { buildTool, type CategorySeed, type ToolSeed } from './catalogHelpers';
 export const CATEGORY_SEEDS: CategorySeed[] = [
   { id: 'image-generation', name: 'Image Generation', icon: 'Palette', description: 'AI image creators, editors, and upscalers.', sort_order: 1 },
   { id: 'video-generation', name: 'Video Generation', icon: 'Video', description: 'Text-to-video, avatars, and video editing AI.', sort_order: 2 },
-  { id: 'coding', name: 'Coding', icon: 'Code2', description: 'AI coding assistants, agents, and app builders.', sort_order: 3 },
-  { id: 'chatbots', name: 'Chatbots', icon: 'Brain', description: 'Conversational AI assistants and LLM chat apps.', sort_order: 4 },
-  { id: 'productivity', name: 'Productivity', icon: 'Calendar', description: 'Writing, notes, meetings, and workflow automation.', sort_order: 5 },
-  { id: 'voice-ai', name: 'Voice AI', icon: 'Volume2', description: 'Voice cloning, TTS, transcription, and dubbing.', sort_order: 6 },
-  { id: 'music-ai', name: 'Music AI', icon: 'Speech', description: 'AI music composition and audio generation.', sort_order: 7 },
-  { id: 'research-ai', name: 'Research AI', icon: 'Compass', description: 'Literature search, citations, and academic tools.', sort_order: 8 },
-  { id: 'marketing-ai', name: 'Marketing AI', icon: 'Activity', description: 'Copy, ads, SEO, and social content generation.', sort_order: 9 },
-  { id: 'design-ai', name: 'Design AI', icon: 'Layers', description: 'UI, branding, presentations, and design automation.', sort_order: 10 },
+  { id: 'ai-writing', name: 'AI Writing', icon: 'PenLine', description: 'AI writing assistants, editors, and long-form copy tools.', sort_order: 3 },
+  { id: 'coding', name: 'Coding', icon: 'Code2', description: 'AI coding assistants, agents, and app builders.', sort_order: 4 },
+  { id: 'chatbots', name: 'Chatbots', icon: 'Brain', description: 'Conversational AI assistants and LLM chat apps.', sort_order: 5 },
+  { id: 'productivity', name: 'Productivity', icon: 'Calendar', description: 'Notes, meetings, and workflow automation.', sort_order: 6 },
+  { id: 'voice-ai', name: 'Voice AI', icon: 'Volume2', description: 'Voice cloning, TTS, transcription, and dubbing.', sort_order: 7 },
+  { id: 'music-ai', name: 'Music AI', icon: 'Speech', description: 'AI music composition and audio generation.', sort_order: 8 },
+  { id: 'research-ai', name: 'Research AI', icon: 'Compass', description: 'Literature search, citations, and academic tools.', sort_order: 9 },
+  { id: 'marketing-ai', name: 'Marketing AI', icon: 'Activity', description: 'Copy, ads, SEO, and social content generation.', sort_order: 10 },
+  { id: 'design-ai', name: 'Design AI', icon: 'Layers', description: 'UI, branding, presentations, and design automation.', sort_order: 11 },
 ];
 
 const img = 'image-generation';
 const vid = 'video-generation';
+const write = 'ai-writing';
 const code = 'coding';
 const chat = 'chatbots';
 const prod = 'productivity';
@@ -162,6 +164,51 @@ export const TOOL_SEEDS: ToolSeed[] = [
   buildTool('beautiful-ai', 'Beautiful.ai', 'AI presentation designer.', 'Beautiful.ai formats slides automatically with smart templates and charts.', 'https://www.beautiful.ai', design, { tags: ['Slides', 'Deck'], pricing: 'Freemium', votes: 410 }),
   buildTool('tome', 'Tome', 'AI storytelling presentations.', 'Tome generates narrative decks with images and layouts from prompts.', 'https://tome.app', design, { tags: ['Story', 'Deck'], pricing: 'Freemium', votes: 360 }),
   buildTool('microsoft-designer', 'Microsoft Designer', 'AI graphic design with DALL·E.', 'Designer creates social posts, invitations, and visuals with Copilot integration.', 'https://designer.microsoft.com', design, { tags: ['Microsoft', 'Social'], pricing: 'Free', votes: 480 }),
+
+  // AI Writing (14)
+  buildTool('rytr', 'Rytr', 'AI writing for blogs and emails.', 'Rytr generates short and long-form copy in 40+ use cases with tone control.', 'https://rytr.me', write, { tags: ['Blog', 'Email'], pricing: 'Freemium', icon: 'PenLine', votes: 540 }),
+  buildTool('wordtune', 'Wordtune', 'Rewrite and refine your sentences.', 'Wordtune improves clarity, tone, and length of any text in browsers and docs.', 'https://www.wordtune.com', write, { tags: ['Rewrite', 'Editor'], pricing: 'Freemium', votes: 610 }),
+  buildTool('quillbot', 'QuillBot', 'Paraphrasing and grammar suite.', 'QuillBot paraphrases, summarizes, and checks grammar for students and professionals.', 'https://quillbot.com', write, { tags: ['Paraphrase', 'Grammar'], pricing: 'Freemium', is_trending: true, votes: 720 }),
+  buildTool('prowritingaid', 'ProWritingAid', 'In-depth writing analysis.', 'ProWritingAid offers style, grammar, and readability reports for authors.', 'https://prowritingaid.com', write, { tags: ['Grammar', 'Style'], pricing: 'Freemium', votes: 480 }),
+  buildTool('sudowrite', 'Sudowrite', 'AI writing partner for fiction.', 'Sudowrite helps novelists with scenes, dialogue, and creative brainstorming.', 'https://www.sudowrite.com', write, { tags: ['Fiction', 'Creative'], pricing: 'Paid', votes: 390 }),
+  buildTool('novelai', 'NovelAI', 'AI-assisted storytelling.', 'NovelAI provides lorebooks, memory, and prose generation for fiction writers.', 'https://novelai.net', write, { tags: ['Fiction', 'Story'], pricing: 'Paid', votes: 420 }),
+  buildTool('hyperwrite', 'HyperWrite', 'Personal writing assistant in Chrome.', 'HyperWrite drafts emails, documents, and replies contextually in your browser.', 'https://www.hyperwriteai.com', write, { tags: ['Chrome', 'Assistant'], pricing: 'Freemium', votes: 360 }),
+  buildTool('lex', 'Lex', 'Modern document editor with AI.', 'Lex is a collaborative writing app with AI outlining and drafting built in.', 'https://lex.page', write, { tags: ['Docs', 'Editor'], pricing: 'Freemium', votes: 310 }),
+  buildTool('hemingway-editor', 'Hemingway Editor', 'Bold, clear writing feedback.', 'Hemingway highlights complex sentences and suggests simpler alternatives.', 'https://hemingwayapp.com', write, { tags: ['Clarity', 'Editor'], pricing: 'Freemium', votes: 450 }),
+  buildTool('writer', 'Writer', 'Enterprise AI writing platform.', 'Writer enforces brand voice and terminology across marketing and support teams.', 'https://writer.com', write, { tags: ['Enterprise', 'Brand'], pricing: 'Paid', votes: 340 }),
+  buildTool('longshot', 'Longshot AI', 'Fact-checked long-form content.', 'Longshot researches topics and generates blog posts with citations.', 'https://www.longshot.ai', write, { tags: ['Blog', 'SEO'], pricing: 'Freemium', votes: 280 }),
+  buildTool('hypotenuse', 'Hypotenuse AI', 'Product descriptions at scale.', 'Hypotenuse generates ecommerce copy, ads, and blog content from product data.', 'https://www.hypotenuse.ai', write, { tags: ['Ecommerce', 'Copy'], pricing: 'Freemium', votes: 300 }),
+  buildTool('textcortex', 'TextCortex', 'AI writing in 25+ languages.', 'TextCortex creates and edits content inside browsers with custom personas.', 'https://textcortex.com', write, { tags: ['Multilingual', 'Personas'], pricing: 'Freemium', votes: 320 }),
+  buildTool('scribe', 'Scribe', 'How-to guides from screen recordings.', 'Scribe auto-generates step-by-step documentation from your workflow captures.', 'https://scribehow.com', write, { tags: ['Docs', 'SOP'], pricing: 'Freemium', votes: 410 }),
+
+  // Additional Image tools (6)
+  buildTool('photoroom', 'Photoroom', 'AI product photos and backgrounds.', 'Photoroom removes backgrounds and generates studio-quality product shots instantly.', 'https://www.photoroom.com', img, { tags: ['Ecommerce', 'Background'], pricing: 'Freemium', votes: 650 }),
+  buildTool('remove-bg', 'remove.bg', 'One-click background removal.', 'Remove.bg extracts subjects from photos with high accuracy for designers and shops.', 'https://www.remove.bg', img, { tags: ['Cutout', 'API'], pricing: 'Freemium', votes: 590 }),
+  buildTool('freepik-ai', 'Freepik AI', 'Stock plus generative image suite.', 'Freepik combines stock assets with AI image generation and editing tools.', 'https://www.freepik.com/ai', img, { tags: ['Stock', 'Generate'], pricing: 'Freemium', votes: 520 }),
+  buildTool('krea-ai', 'Krea AI', 'Real-time generative canvas.', 'Krea offers live image generation and upscaling for designers iterating fast.', 'https://www.krea.ai', img, { tags: ['Realtime', 'Canvas'], pricing: 'Freemium', is_trending: true, votes: 470 }),
+  buildTool('recraft', 'Recraft', 'Vector and brand-style image AI.', 'Recraft generates consistent brand illustrations and vector graphics.', 'https://www.recraft.ai', img, { tags: ['Vector', 'Brand'], pricing: 'Freemium', votes: 380 }),
+  buildTool('getimg-ai', 'getimg.ai', 'All-in-one AI image toolkit.', 'getimg.ai provides generation, inpainting, and upscaling in one web studio.', 'https://getimg.ai', img, { tags: ['Toolkit', 'Inpaint'], pricing: 'Freemium', votes: 340 }),
+
+  // Additional Video tools (5)
+  buildTool('haiper', 'Haiper', 'Creative AI video generation.', 'Haiper turns prompts and images into stylized short video clips.', 'https://haiper.ai', vid, { tags: ['Creative', 'Short'], pricing: 'Freemium', votes: 410 }),
+  buildTool('pixverse', 'PixVerse', 'AI video from text and images.', 'PixVerse creates cinematic clips with motion control and style presets.', 'https://pixverse.ai', vid, { tags: ['Cinematic', 'Motion'], pricing: 'Freemium', votes: 380 }),
+  buildTool('colossyan', 'Colossyan', 'AI video for L&D teams.', 'Colossyan builds training videos with avatars and PPT-to-video workflows.', 'https://www.colossyan.com', vid, { tags: ['Training', 'Avatar'], pricing: 'Paid', votes: 350 }),
+  buildTool('elai', 'Elai.io', 'Text to video with avatars.', 'Elai generates presenter videos from slides and scripts in minutes.', 'https://elai.io', vid, { tags: ['Avatar', 'Slides'], pricing: 'Freemium', votes: 320 }),
+  buildTool('kapwing', 'Kapwing', 'Collaborative video editor with AI.', 'Kapwing offers subtitles, resizing, and AI edits for social video teams.', 'https://www.kapwing.com', vid, { tags: ['Social', 'Editor'], pricing: 'Freemium', votes: 440 }),
+
+  // Additional Coding tools (6)
+  buildTool('cline', 'Cline', 'Autonomous coding agent in VS Code.', 'Cline plans and executes multi-file edits with terminal access in your IDE.', 'https://cline.bot', code, { tags: ['Agent', 'VS Code'], pricing: 'Open Source', is_trending: true, votes: 580 }),
+  buildTool('aider', 'Aider', 'AI pair programming in the terminal.', 'Aider edits git-tracked codebases via CLI with GPT and Claude models.', 'https://aider.chat', code, { tags: ['CLI', 'Git'], pricing: 'Open Source', votes: 490 }),
+  buildTool('jetbrains-ai', 'JetBrains AI', 'AI assistant in IntelliJ and family.', 'JetBrains AI adds chat, completion, and refactoring across JetBrains IDEs.', 'https://www.jetbrains.com/ai/', code, { tags: ['IDE', 'Java'], pricing: 'Freemium', votes: 420 }),
+  buildTool('poolside', 'Poolside', 'Enterprise code generation platform.', 'Poolside trains and deploys private models for large engineering organizations.', 'https://poolside.ai', code, { tags: ['Enterprise', 'Private'], pricing: 'Paid', votes: 220 }),
+  buildTool('sweep-ai', 'Sweep AI', 'AI junior developer for GitHub.', 'Sweep opens pull requests that fix bugs and implement small features from issues.', 'https://sweep.dev', code, { tags: ['GitHub', 'PR'], pricing: 'Freemium', votes: 360 }),
+
+  // Additional Productivity tools (5)
+  buildTool('linear-ai', 'Linear', 'AI-assisted issue tracking.', 'Linear speeds up product teams with AI summaries, triage, and project insights.', 'https://linear.app', prod, { tags: ['PM', 'Issues'], pricing: 'Freemium', votes: 480 }),
+  buildTool('todoist-ai', 'Todoist', 'Smart task planning with AI.', 'Todoist uses AI to break down goals, schedule tasks, and draft action plans.', 'https://todoist.com', prod, { tags: ['Tasks', 'Planning'], pricing: 'Freemium', votes: 520 }),
+  buildTool('clickup-ai', 'ClickUp AI', 'AI across docs, tasks, and wikis.', 'ClickUp embeds writing, summarization, and automation in one workspace.', 'https://clickup.com/ai', prod, { tags: ['Workspace', 'PM'], pricing: 'Freemium', votes: 450 }),
+  buildTool('coda-ai', 'Coda AI', 'Docs that run your team workflows.', 'Coda combines documents, tables, and AI automations for ops teams.', 'https://coda.io', prod, { tags: ['Docs', 'Automation'], pricing: 'Freemium', votes: 390 }),
+  buildTool('read-ai', 'Read AI', 'Meeting summaries and search.', 'Read captures meeting notes, highlights, and coaching across Zoom and Teams.', 'https://www.read.ai', prod, { tags: ['Meetings', 'Summary'], pricing: 'Freemium', votes: 410 }),
 ];
 
 export const TOOL_COUNT = TOOL_SEEDS.length;

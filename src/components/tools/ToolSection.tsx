@@ -43,7 +43,7 @@ export function ToolSection({
 
   return (
     <ScrollReveal delay={delay} className="relative">
-      <section id={id} className="relative max-w-6xl mx-auto px-4 sm:px-6">
+      <section id={id} className="relative max-w-6xl mx-auto px-4 sm:px-6 section-surface rounded-3xl py-2 md:py-4">
         <div className="section-fade-top pointer-events-none absolute -top-12 left-0 right-0 h-12" aria-hidden />
 
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">

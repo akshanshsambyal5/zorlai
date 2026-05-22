@@ -505,7 +505,7 @@ export default function App() {
       </AnimatePresence>
 
       <main
-        className={`flex-1 w-full relative z-10 pb-20 min-w-0 ${showMobileDiscoverTabs ? 'pt-12 sm:pt-14 xl:pt-0' : ''}`}
+        className={`flex-1 w-full relative z-10 pb-20 min-w-0 ${showMobileDiscoverTabs ? 'pt-10 sm:pt-12 xl:pt-0' : ''}`}
       >
         <AnimatePresence mode="wait">{renderRoute()}</AnimatePresence>
       </main>

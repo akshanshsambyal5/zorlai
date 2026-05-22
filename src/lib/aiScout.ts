@@ -17,6 +17,7 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
   'research-ai': ['research', 'paper', 'citation', 'academic', 'literature'],
   'marketing-ai': ['marketing', 'seo', 'ads', 'copy', 'social'],
   'design-ai': ['design', 'ui', 'brand', 'presentation', 'figma'],
+  'ai-writing': ['writing', 'copy', 'blog', 'essay', 'grammar', 'rewrite', 'content'],
 };
 
 function tokenize(text: string): string[] {

@@ -20,7 +20,7 @@ export function HeroSection({
   totalToolCount,
   categoryCount = 10,
 }: HeroSectionProps) {
-  const trendingTags = ['writing', 'image', 'coding', 'research', 'video', 'agents'];
+  const trendingTags = ['writing', 'image', 'coding', 'video'];
 
   const stats = [
     { label: 'AI Tools', value: `${Math.max(totalToolCount, 1)}+`, accent: 'from-sky-500 to-blue-600' },
@@ -29,50 +29,49 @@ export function HeroSection({
   ];
 
   return (
-    <section className="relative pt-24 pb-14 sm:pt-28 sm:pb-16 md:pt-36 md:pb-20 overflow-hidden">
+    <section className="relative pt-[4.75rem] pb-5 sm:pt-24 sm:pb-8 md:pt-32 md:pb-14 lg:pt-36 lg:pb-20 overflow-hidden">
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center w-full min-w-0">
         <ScrollReveal>
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="inline-flex items-center gap-2 glass-panel rounded-full px-4 py-2 mb-8"
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="inline-flex items-center gap-2 glass-panel rounded-full px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6"
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
             </span>
-            <span className="type-caption">
-              Live directory · <span className="text-slate-700 font-medium">{totalToolCount}</span> tools indexed
+            <span className="type-caption text-[11px] sm:text-xs">
+              Live · <span className="text-slate-700 font-medium">{totalToolCount}</span> tools
             </span>
           </motion.div>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.08}>
-          <h1 className="type-hero max-w-4xl mx-auto">
+        <ScrollReveal delay={0.06}>
+          <h1 className="type-hero max-w-4xl mx-auto text-balance">
             Discover the world&apos;s best{' '}
             <span className="text-gradient-hero">free AI tools</span>
           </h1>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.14}>
-          <p className="type-lead max-w-2xl mx-auto mb-12">
-            Curated models, agents, and creative engines — hand-picked for builders.
-            Search, save, and launch in one calm workspace.
+        <ScrollReveal delay={0.1}>
+          <p className="type-lead max-w-xl mx-auto mb-5 sm:mb-8 mt-3 sm:mt-4 text-[15px] sm:text-base line-clamp-3 sm:line-clamp-none">
+            Curated models, agents, and creative engines for builders.
           </p>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.2} className="w-full max-w-2xl">
-          <div className="glass-panel-strong rounded-2xl p-2 flex flex-col md:flex-row gap-2 glow-blue">
-            <div className="flex-1 relative flex items-center min-h-[52px]">
-              <LucideIcon name="Search" className="absolute left-4 w-4 h-4 text-slate-400" />
+        <ScrollReveal delay={0.14} className="w-full max-w-2xl">
+          <div className="glass-panel-strong rounded-2xl p-1.5 sm:p-2 flex flex-col sm:flex-row gap-2 glow-blue">
+            <div className="flex-1 relative flex items-center min-h-[48px] sm:min-h-[52px]">
+              <LucideIcon name="Search" className="absolute left-3.5 sm:left-4 w-4 h-4 text-slate-400" />
               <input
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && onSearchSubmit?.()}
-                placeholder="Search tools, tags, or categories..."
-                className="w-full bg-transparent border-0 outline-none pl-11 pr-4 text-slate-800 text-[15px] font-normal placeholder:text-slate-400 tracking-tight"
+                placeholder="Search tools or categories..."
+                className="w-full bg-transparent border-0 outline-none pl-10 sm:pl-11 pr-3 text-slate-800 text-[15px] font-normal placeholder:text-slate-400 tracking-tight"
               />
             </div>
             {onSearchSubmit && (
@@ -82,7 +81,7 @@ export function HeroSection({
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.35, ease: 'easeOut' }}
-                className="btn-primary text-white text-sm font-medium px-5 py-3 min-h-[44px] rounded-xl shrink-0 w-full md:w-auto touch-manipulation"
+                className="btn-primary text-white text-sm font-medium px-5 py-3 min-h-[48px] rounded-xl shrink-0 w-full sm:w-auto touch-manipulation"
               >
                 Search
               </motion.button>
@@ -90,7 +89,7 @@ export function HeroSection({
           </div>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.26} className="mt-5">
+        <ScrollReveal delay={0.18} className="mt-3 hidden sm:block">
           <div className="flex flex-wrap justify-center gap-2">
             {trendingTags.map((tag) => (
               <span key={tag}>
@@ -107,8 +106,8 @@ export function HeroSection({
           </div>
         </ScrollReveal>
 
-        <ScrollReveal delay={0.34} className="w-full max-w-2xl mt-16">
-          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8 pt-8 sm:pt-10 border-t border-slate-200/80 w-full">
+        <ScrollReveal delay={0.22} className="hidden md:block w-full max-w-2xl mt-12 lg:mt-16">
+          <div className="grid grid-cols-3 gap-4 md:gap-8 pt-8 border-t border-slate-200/80 w-full">
             {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -119,11 +118,11 @@ export function HeroSection({
                 className="text-center"
               >
                 <div
-                  className={`text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight bg-gradient-to-r ${stat.accent} bg-clip-text text-transparent`}
+                  className={`text-2xl md:text-3xl font-semibold tracking-tight bg-gradient-to-r ${stat.accent} bg-clip-text text-transparent`}
                 >
                   {stat.value}
                 </div>
-                <div className="type-caption mt-1 text-[11px] sm:text-xs leading-tight">{stat.label}</div>
+                <div className="type-caption mt-1">{stat.label}</div>
               </motion.div>
             ))}
           </div>

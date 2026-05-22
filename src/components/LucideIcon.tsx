@@ -40,6 +40,7 @@ import {
   ChevronDown,
   Mail,
   Lock,
+  PenLine,
 } from 'lucide-react';
 
 type IconComponent = React.ComponentType<{ className?: string }>;
@@ -87,6 +88,7 @@ const iconsMap: Record<string, IconComponent> = {
   ChevronDown,
   Mail,
   Lock,
+  PenLine,
 };
 
 interface LucideIconProps {

@@ -21,6 +21,13 @@ export const CATEGORY_VISUALS: Record<string, CategoryVisual> = {
     image:
       'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80',
   },
+  'ai-writing': {
+    gradient: 'from-amber-600/30 via-orange-600/18 to-slate-900/10',
+    glow: 'rgba(251,191,36,0.28)',
+    accent: 'text-amber-300',
+    image:
+      'https://images.unsplash.com/photo-1455390583460-4066fb1c7a6b?auto=format&fit=crop&w=1200&q=80',
+  },
   coding: {
     gradient: 'from-emerald-600/30 via-teal-600/20 to-slate-900/10',
     glow: 'rgba(16,185,129,0.28)',

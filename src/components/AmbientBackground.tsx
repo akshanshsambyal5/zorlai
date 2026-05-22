@@ -20,6 +20,8 @@ export function AmbientBackground() {
         className="absolute top-[30%] right-[5%] w-[min(400px,55vw)] h-[min(400px,55vw)] rounded-full bg-blue-200/40 blur-[100px] animate-float-orb-delayed"
       />
       <div className="absolute bottom-[10%] left-[40%] w-[300px] h-[300px] rounded-full bg-cyan-200/25 blur-[90px] animate-pulse-glow" />
+      <div className="absolute top-[55%] left-[8%] w-[min(280px,45vw)] h-[min(280px,45vw)] rounded-full bg-slate-900/[0.04] blur-[100px]" />
+      <div className="absolute top-[12%] right-[25%] w-[200px] h-[200px] rounded-full bg-indigo-900/[0.05] blur-[80px]" />
 
       <motion.div
         animate={{ rotate: 360 }}

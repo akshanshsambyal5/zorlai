@@ -2,6 +2,7 @@ import { useMemo, useState, type MouseEvent, type FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { AITool, Category } from '../types';
 import { HeroSection } from '../components/HeroSection';
+import { CategoryStrip } from '../components/categories/CategoryStrip';
 import { ToolSection } from '../components/tools/ToolSection';
 import { LucideIcon } from '../components/LucideIcon';
 import { ScrollReveal } from '../components/ui/ScrollReveal';
@@ -76,7 +77,9 @@ export function HomePage({
         categoryCount={categories.length}
       />
 
-      <div className="space-y-24 md:space-y-32 mt-4">
+      <CategoryStrip categories={categories} loading={loading} />
+
+      <div className="space-y-20 md:space-y-32">
         {loading ? (
           <div className="max-w-6xl mx-auto px-4 space-y-16">
             {[1, 2, 3].map((n) => (
@@ -138,11 +141,12 @@ export function HomePage({
         {!loading && (
           <>
             <ScrollReveal delay={0.2} className="max-w-6xl mx-auto px-4 sm:px-6">
-              <section className="glass-panel-strong rounded-3xl p-6 sm:p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <div className="text-left space-y-2">
-                  <p className="type-eyebrow">Full catalog</p>
-                  <h2 className="type-h2">Explore every tool</h2>
-                  <p className="type-body-muted max-w-md">
+              <section className="section-dark-accent rounded-3xl p-6 sm:p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 relative overflow-hidden">
+                <div className="absolute inset-0 dark-mesh-overlay pointer-events-none rounded-3xl" aria-hidden />
+                <div className="relative text-left space-y-2">
+                  <p className="type-eyebrow !text-sky-400">Full catalog</p>
+                  <h2 className="type-h2 !text-white">Explore every tool</h2>
+                  <p className="text-sm text-slate-300 max-w-md">
                     Search, filter by pricing, and browse the complete curated directory.
                   </p>
                 </div>
@@ -152,7 +156,7 @@ export function HomePage({
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="btn-primary text-white text-sm font-medium px-8 py-3.5 min-h-[44px] rounded-full w-full sm:w-auto touch-manipulation"
+                  className="relative z-10 btn-primary text-white text-sm font-medium px-8 py-3.5 min-h-[44px] rounded-full w-full sm:w-auto touch-manipulation"
                 >
                   Open explore
                 </motion.button>
@@ -160,31 +164,31 @@ export function HomePage({
             </ScrollReveal>
 
             {categories.length > 0 && (
-              <ScrollReveal delay={0.25} className="max-w-6xl mx-auto px-4 sm:px-6">
+              <ScrollReveal delay={0.25} className="hidden lg:block max-w-6xl mx-auto px-4 sm:px-6">
                 <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
                   <div>
-                    <p className="type-eyebrow">Browse</p>
-                    <h2 className="type-h2">By category</h2>
+                    <p className="type-eyebrow">Deep dive</p>
+                    <h2 className="type-h2">All categories</h2>
                   </div>
                   <button
                     type="button"
                     onClick={() => navigate(paths.categories())}
                     className="text-sm text-sky-600 hover:text-sky-800 font-medium transition-colors"
                   >
-                    All categories →
+                    Category index →
                   </button>
                 </div>
-                <div className="grid grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-                  {categories.slice(0, 5).map((cat) => (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                  {categories.map((cat) => (
                     <motion.button
                       key={cat.id}
                       type="button"
                       onClick={() => navigate(paths.category(cat.id))}
-                      whileHover={{ scale: 1.02 }}
+                      whileHover={{ scale: 1.02, y: -2 }}
                       transition={{ duration: 0.35, ease: 'easeOut' }}
-                      className="glass-panel rounded-2xl p-4 sm:p-5 text-left hover-glow min-h-[88px] touch-manipulation w-full"
+                      className="glass-card-premium rounded-2xl p-4 text-left hover-glow min-h-[88px] touch-manipulation w-full"
                     >
-                      <span className="text-2xl mb-2 block">{cat.icon}</span>
+                      <LucideIcon name={cat.icon} className="w-5 h-5 text-sky-600 mb-2" />
                       <span className="type-body font-medium text-slate-800 block truncate">{cat.name}</span>
                       <span className="type-caption">{cat.count} tools</span>
                     </motion.button>
