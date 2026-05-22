@@ -55,7 +55,7 @@ export function Navbar({
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-0 left-0 w-full z-50 px-4 md:px-6 py-4"
+      className="fixed top-0 left-0 w-full z-50 px-3 sm:px-4 md:px-6 py-3 sm:py-4 safe-top"
     >
       <div className="max-w-7xl mx-auto">
         <motion.div
@@ -148,7 +148,7 @@ export function Navbar({
                   key={item.id}
                   type="button"
                   onClick={() => handleNav(item.path)}
-                  className={`px-4 py-3 rounded-xl text-sm font-medium text-left ${
+                  className={`min-h-[44px] px-4 py-3 rounded-xl text-sm font-medium text-left touch-manipulation ${
                     activeTab === item.id ? 'bg-sky-100 text-slate-900' : 'text-slate-600 hover:bg-sky-50'
                   }`}
                 >

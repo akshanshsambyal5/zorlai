@@ -102,7 +102,7 @@ export function ToolsListingPage({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className={`px-4 py-2 text-xs font-medium rounded-full transition ${
+              className={`min-h-[40px] px-4 py-2.5 text-xs font-medium rounded-full transition touch-manipulation ${
                 selectedPricing === opt
                   ? 'bg-sky-500 text-white shadow-sm'
                   : 'text-slate-600 hover:bg-sky-50/80'

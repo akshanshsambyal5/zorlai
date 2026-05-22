@@ -3,8 +3,14 @@ import type { Provider, Session, User } from '@supabase/supabase-js';
 import { getSupabase, isSupabaseConfigured } from '../lib/supabase';
 import { getAuthErrorMessage } from '../lib/authErrors';
 import { getAuthRedirectUrl } from '../lib/authRedirect';
+import {
+  cleanAuthCallbackFromUrl,
+  getInitialAuthCallbackError,
+  parseAuthCallbackError,
+  storeOAuthRedirect,
+} from '../lib/authCallback';
 import { ensureUserProfile } from '../lib/ensureProfile';
-import { resetPasswordPath } from '../lib/router';
+import { dashboardPath, resetPasswordPath } from '../lib/router';
 
 export interface UserProfile {
   id: string;
@@ -50,7 +56,7 @@ export function useAuth() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileSyncing, setProfileSyncing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => getInitialAuthCallbackError());
 
   const syncProfile = useCallback(async (authUser: User) => {
     setProfileSyncing(true);
@@ -111,6 +117,17 @@ export function useAuth() {
         if (event === 'INITIAL_SESSION') {
           window.clearTimeout(timeout);
           setLoading(false);
+          if (typeof window !== 'undefined' && parseAuthCallbackError()) {
+            cleanAuthCallbackFromUrl();
+          }
+        }
+
+        if (event === 'SIGNED_IN' && typeof window !== 'undefined') {
+          const urlError = parseAuthCallbackError();
+          if (urlError) {
+            setError(getAuthErrorMessage(urlError));
+            cleanAuthCallbackFromUrl();
+          }
         }
 
         if (event === 'PASSWORD_RECOVERY' && typeof window !== 'undefined') {
@@ -162,14 +179,17 @@ export function useAuth() {
     return data;
   };
 
-  const signInWithOAuth = async (provider: Provider) => {
+  const signInWithOAuth = async (provider: Provider, redirectAfter?: string) => {
     setError(null);
+    const destination = redirectAfter ?? dashboardPath();
+    storeOAuthRedirect(destination);
+
     const supabase = getSupabase();
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: getAuthRedirectUrl('/'),
-        queryParams: provider === 'google' ? { access_type: 'offline', prompt: 'consent' } : undefined,
+        queryParams: provider === 'google' ? { access_type: 'offline', prompt: 'select_account' } : undefined,
       },
     });
     if (oauthError) {
@@ -229,8 +249,8 @@ export function useAuth() {
     signUp,
     signIn,
     signInWithOAuth,
-    signInWithGoogle: () => signInWithOAuth('google'),
-    signInWithFacebook: () => signInWithOAuth('facebook'),
+    signInWithGoogle: (redirectAfter?: string) => signInWithOAuth('google', redirectAfter),
+    signInWithFacebook: (redirectAfter?: string) => signInWithOAuth('facebook', redirectAfter),
     resetPassword,
     updatePassword,
     signOut,

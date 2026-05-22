@@ -138,7 +138,7 @@ export function HomePage({
         {!loading && (
           <>
             <ScrollReveal delay={0.2} className="max-w-6xl mx-auto px-4 sm:px-6">
-              <section className="glass-panel-strong rounded-3xl p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <section className="glass-panel-strong rounded-3xl p-6 sm:p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <div className="text-left space-y-2">
                   <p className="type-eyebrow">Full catalog</p>
                   <h2 className="type-h2">Explore every tool</h2>
@@ -152,7 +152,7 @@ export function HomePage({
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="btn-primary text-white text-sm font-medium px-8 py-3.5 rounded-full shrink-0"
+                  className="btn-primary text-white text-sm font-medium px-8 py-3.5 min-h-[44px] rounded-full w-full sm:w-auto touch-manipulation"
                 >
                   Open explore
                 </motion.button>
@@ -174,7 +174,7 @@ export function HomePage({
                     All categories →
                   </button>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                <div className="grid grid-cols-1 min-[400px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                   {categories.slice(0, 5).map((cat) => (
                     <motion.button
                       key={cat.id}
@@ -182,7 +182,7 @@ export function HomePage({
                       onClick={() => navigate(paths.category(cat.id))}
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.35, ease: 'easeOut' }}
-                      className="glass-panel rounded-2xl p-4 text-left hover-glow"
+                      className="glass-panel rounded-2xl p-4 sm:p-5 text-left hover-glow min-h-[88px] touch-manipulation w-full"
                     >
                       <span className="text-2xl mb-2 block">{cat.icon}</span>
                       <span className="type-body font-medium text-slate-800 block truncate">{cat.name}</span>

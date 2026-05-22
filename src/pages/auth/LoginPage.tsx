@@ -75,7 +75,7 @@ export function LoginPage() {
         </p>
       }
     >
-      <OAuthButtons disabled={loading} />
+      <OAuthButtons disabled={loading} redirectAfter={getRedirectAfterLogin()} />
       <AuthErrorAlert message={displayError} />
 
       <form onSubmit={handleSubmit} className="space-y-4">

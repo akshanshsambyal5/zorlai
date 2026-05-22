@@ -12,7 +12,7 @@ Complete guide for email/password, Google OAuth, and Facebook OAuth.
 2. (Recommended for production) Enable **Confirm email** if you want verified signups.
 3. Set **Site URL** under **Authentication** → **URL Configuration**:
    - Local: `http://localhost:3000`
-   - Production: `https://your-domain.com`
+   - Production: `https://zorlai.xyz` (or `https://www.zorlai.xyz` if that is your primary domain)
 
 ### Redirect URLs
 
@@ -20,8 +20,11 @@ Under **Authentication** → **URL Configuration**, add these to **Redirect URLs
 
 ```
 http://localhost:3000/**
-https://your-domain.com/**
+https://zorlai.xyz/**
+https://www.zorlai.xyz/**
 ```
+
+The app uses `window.location.origin` at runtime for OAuth `redirectTo`, so both apex and `www` work when allowlisted.
 
 OAuth and password reset links must match an allowed redirect URL.
 
@@ -33,7 +36,8 @@ OAuth and password reset links must match an allowed redirect URL.
 2. Create **OAuth 2.0 Client ID** (Web application).
 3. **Authorized JavaScript origins:**
    - `http://localhost:3000`
-   - `https://your-domain.com`
+   - `https://zorlai.xyz`
+   - `https://www.zorlai.xyz`
 4. **Authorized redirect URIs** (use your Supabase project ref):
 
 ```
@@ -78,11 +82,11 @@ SUPABASE_URL=https://<PROJECT_REF>.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-APP_URL=http://localhost:3000
 VITE_APP_URL=http://localhost:3000
+# Production (Vercel): https://zorlai.xyz — optional; browser uses window.location.origin in prod
 ```
 
-`VITE_APP_URL` / `APP_URL` are used for OAuth and password-reset redirect targets.
+`VITE_APP_URL` is a fallback for SSR/build; **in the browser, OAuth always uses the current origin** (`zorlai.xyz` or `www.zorlai.xyz`).
 
 ## 5. Database profile trigger
 
@@ -125,7 +129,8 @@ UPDATE profiles SET is_admin = true WHERE email = 'you@example.com';
 
 | Issue | Fix |
 |-------|-----|
-| OAuth redirects to wrong URL | Match Site URL + Redirect URLs in Supabase |
+| OAuth redirects to wrong URL | Add `https://zorlai.xyz/**` and `https://www.zorlai.xyz/**` in Supabase; do not set `VITE_APP_URL` to localhost on Vercel |
+| Google works locally, not in prod | Rebuild after fixing env; Google redirect URI must be `https://<ref>.supabase.co/auth/v1/callback` only |
 | `Invalid login credentials` | Wrong password or unconfirmed email |
 | Reset link expired | Request a new link from `/forgot-password` |
 | 401 on bookmarks/votes | Sign in; ensure anon key and URL are correct |

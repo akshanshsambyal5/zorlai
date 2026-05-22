@@ -5,7 +5,8 @@ import { useAuthContext } from '../context/AuthContext';
 import { OAuthButtons } from './auth/OAuthButtons';
 import { AuthErrorAlert } from './auth/AuthErrorAlert';
 import { isValidEmail } from '../lib/authErrors';
-import { forgotPasswordPath, loginPath, navigate, signupPath } from '../lib/router';
+import { getSafeRedirectFromUrl } from '../lib/authCallback';
+import { dashboardPath, forgotPasswordPath, loginPath, navigate, signupPath } from '../lib/router';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -92,7 +93,10 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
               </button>
             </div>
 
-            <OAuthButtons disabled={loading} />
+            <OAuthButtons
+              disabled={loading}
+              redirectAfter={getSafeRedirectFromUrl() ?? dashboardPath()}
+            />
             <AuthErrorAlert message={displayError} />
 
             <div className="flex gap-2 mb-4">

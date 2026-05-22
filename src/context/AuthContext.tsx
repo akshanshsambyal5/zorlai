@@ -13,8 +13,8 @@ interface AuthContextValue {
   isAdmin: boolean;
   signUp: (email: string, password: string, displayName?: string) => Promise<unknown>;
   signIn: (email: string, password: string) => Promise<unknown>;
-  signInWithGoogle: () => Promise<void>;
-  signInWithFacebook: () => Promise<void>;
+  signInWithGoogle: (redirectAfter?: string) => Promise<void>;
+  signInWithFacebook: (redirectAfter?: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updatePassword: (newPassword: string) => Promise<void>;
   signOut: () => Promise<void>;

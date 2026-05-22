@@ -90,7 +90,7 @@ export function SignupPage() {
         </p>
       }
     >
-      <OAuthButtons disabled={loading} />
+      <OAuthButtons disabled={loading} redirectAfter={dashboardPath()} />
       <AuthErrorAlert message={displayError} />
 
       <form onSubmit={handleSubmit} className="space-y-4">

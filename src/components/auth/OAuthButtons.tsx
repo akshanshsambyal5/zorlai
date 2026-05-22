@@ -2,22 +2,34 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { LucideIcon } from '../LucideIcon';
 import { useAuthContext } from '../../context/AuthContext';
+import { getSafeRedirectFromUrl } from '../../lib/authCallback';
+import { dashboardPath } from '../../lib/router';
 
 interface OAuthButtonsProps {
   disabled?: boolean;
+  /** Path to navigate after OAuth (e.g. /dashboard). Falls back to ?redirect= or /dashboard */
+  redirectAfter?: string;
 }
 
-export function OAuthButtons({ disabled }: OAuthButtonsProps) {
-  const { signInWithGoogle, signInWithFacebook, clearError } = useAuthContext();
+function resolveOAuthRedirect(redirectAfter?: string): string {
+  return redirectAfter ?? getSafeRedirectFromUrl() ?? dashboardPath();
+}
+
+export function OAuthButtons({ disabled, redirectAfter }: OAuthButtonsProps) {
+  const { signInWithGoogle, signInWithFacebook, clearError, error } = useAuthContext();
   const [loadingProvider, setLoadingProvider] = useState<'google' | 'facebook' | null>(null);
+  const [oauthError, setOauthError] = useState<string | null>(null);
 
   const handleOAuth = async (provider: 'google' | 'facebook') => {
     setLoadingProvider(provider);
+    setOauthError(null);
     clearError();
+    const destination = resolveOAuthRedirect(redirectAfter);
     try {
-      if (provider === 'google') await signInWithGoogle();
-      else await signInWithFacebook();
-    } catch {
+      if (provider === 'google') await signInWithGoogle(destination);
+      else await signInWithFacebook(destination);
+    } catch (err: unknown) {
+      setOauthError(err instanceof Error ? err.message : 'Sign-in failed. Please try again.');
       setLoadingProvider(null);
     }
   };
@@ -30,7 +42,7 @@ export function OAuthButtons({ disabled }: OAuthButtonsProps) {
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
         onClick={() => handleOAuth('google')}
-        className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl glass-panel border border-slate-200 hover:border-sky-300 text-sm font-medium text-slate-800 transition-all disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-3 min-h-[48px] py-3.5 rounded-xl glass-panel border border-slate-200 hover:border-sky-300 text-sm font-medium text-slate-800 transition-all disabled:opacity-50 touch-manipulation"
       >
         {loadingProvider === 'google' ? (
           <LucideIcon name="Sparkles" className="w-4 h-4 animate-spin text-cyan-300" />
@@ -51,7 +63,7 @@ export function OAuthButtons({ disabled }: OAuthButtonsProps) {
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
         onClick={() => handleOAuth('facebook')}
-        className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl glass-panel border border-slate-200 hover:border-[#1877F2]/40 text-sm font-medium text-slate-800 transition-all disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-3 min-h-[48px] py-3.5 rounded-xl glass-panel border border-slate-200 hover:border-[#1877F2]/40 text-sm font-medium text-slate-800 transition-all disabled:opacity-50 touch-manipulation"
       >
         {loadingProvider === 'facebook' ? (
           <LucideIcon name="Sparkles" className="w-4 h-4 animate-spin text-cyan-300" />
@@ -62,6 +74,12 @@ export function OAuthButtons({ disabled }: OAuthButtonsProps) {
         )}
         Continue with Facebook
       </motion.button>
+
+      {(oauthError || error) && (
+        <p className="text-sm text-rose-600 text-center px-2" role="alert">
+          {oauthError || error}
+        </p>
+      )}
 
       <div className="relative flex items-center gap-3 py-1">
         <div className="flex-1 h-px bg-slate-200" />

@@ -34,13 +34,15 @@ import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { PageShell } from './components/layout/PageShell';
+import { AuthCallbackHandler } from './components/auth/AuthCallbackHandler';
+import { MobileNavTabs } from './components/MobileNavTabs';
 import { paths, navTabFromRoute, toolPath } from './lib/router';
 import { ensureArray } from './lib/safeArray';
 
 const AUTH_ROUTES = new Set(['login', 'signup', 'forgot-password', 'reset-password']);
 
 export default function App() {
-  const { isAuthenticated, isAdmin, loading: authLoading } = useAuthContext();
+  const { isAuthenticated, isAdmin, loading: authLoading, error: authError, clearError } = useAuthContext();
   const { route, navigate } = useRouter();
 
   const [selectedToolForDetail, setSelectedToolForDetail] = useState<AITool | null>(null);
@@ -188,6 +190,9 @@ export default function App() {
   };
 
   const displayError = actionError || catalogError;
+  const showMobileDiscoverTabs =
+    !isAuthRoute &&
+    ['home', 'trending', 'new', 'popular', 'explore', 'search'].includes(route.name);
 
   const renderRoute = () => {
     if (isBootLoading && !isAuthRoute) {
@@ -451,8 +456,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen text-slate-900 flex flex-col relative overflow-x-hidden">
+    <div className="min-h-screen text-slate-900 flex flex-col relative overflow-x-hidden max-w-[100vw]">
       <AmbientBackground />
+      <AuthCallbackHandler />
 
       <Navbar
         activeTab={navActiveTab}
@@ -461,6 +467,26 @@ export default function App() {
         onOpenAuth={() => setIsAuthOpen(true)}
         onNavigate={navigate}
       />
+
+      {showMobileDiscoverTabs && (
+        <MobileNavTabs activeTab={navActiveTab} onNavigate={navigate} />
+      )}
+
+      <AnimatePresence>
+        {authError && (
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            className="fixed top-24 left-1/2 -translate-x-1/2 z-[56] max-w-md w-[calc(100%-2rem)] px-4 py-3 rounded-2xl glass-panel border-rose-300 text-sm text-rose-700 text-center"
+          >
+            {authError}
+            <button type="button" onClick={clearError} className="ml-2 text-rose-500 underline text-xs">
+              dismiss
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {displayError && (
@@ -478,11 +504,13 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <main className="flex-1 w-full relative z-10 pb-20">
+      <main
+        className={`flex-1 w-full relative z-10 pb-20 min-w-0 ${showMobileDiscoverTabs ? 'pt-12 sm:pt-14 xl:pt-0' : ''}`}
+      >
         <AnimatePresence mode="wait">{renderRoute()}</AnimatePresence>
       </main>
 
-      <footer className="relative z-10 mt-auto border-t border-sky-100 py-8 px-6 bg-white/40 backdrop-blur-md">
+      <footer className="relative z-10 mt-auto border-t border-sky-100 py-8 px-4 sm:px-6 bg-white/40 backdrop-blur-md safe-bottom">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-600">
           <span>© 2026 ZorlAI · AI tools directory</span>
           <div className="flex flex-wrap justify-center gap-4 md:gap-6">

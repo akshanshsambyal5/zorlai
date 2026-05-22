@@ -17,7 +17,7 @@ export function PageShell({ title, subtitle, badge, children, className = '' }: 
       animate={{ opacity: 1, filter: 'blur(0px)' }}
       exit={{ opacity: 0, filter: 'blur(6px)' }}
       transition={{ duration: 0.75, ease: 'easeOut' }}
-      className={`pt-28 pb-20 ${className}`}
+      className={`pt-24 sm:pt-28 pb-16 sm:pb-20 ${className}`}
     >
       <ScrollReveal className="max-w-6xl mx-auto px-4 sm:px-6 text-center mb-12">
         {badge && (

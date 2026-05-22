@@ -68,7 +68,7 @@ export function GlassCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleCardClick}
-      className="glass-card-premium relative group overflow-hidden rounded-2xl p-5 sm:p-6 cursor-pointer flex flex-col min-h-[320px] hover-glow"
+      className="glass-card-premium relative group overflow-hidden rounded-2xl p-4 sm:p-6 cursor-pointer flex flex-col min-h-[300px] sm:min-h-[320px] hover-glow max-w-full"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
@@ -140,7 +140,7 @@ export function GlassCard({
             ))}
           </div>
 
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
             <button
               type="button"
               onClick={(e) => {
@@ -148,20 +148,20 @@ export function GlassCard({
                 if (externalUrl) openToolWebsite(tool.url);
                 else onOpenDetails(tool);
               }}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl btn-primary text-white text-xs font-semibold"
+              className="flex-1 flex items-center justify-center gap-1.5 min-h-[44px] py-2.5 rounded-xl btn-primary text-white text-xs font-semibold touch-manipulation"
             >
               <LucideIcon name="ExternalLink" className="w-3.5 h-3.5" />
               Open tool
             </button>
 
-            <div className="flex gap-1">
+            <div className="flex gap-1 justify-end sm:justify-start shrink-0">
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onOpenDetails(tool);
                 }}
-                className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-sky-700 hover:border-sky-300 transition"
+                className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-sky-700 hover:border-sky-300 transition touch-manipulation"
                 title="Details"
               >
                 <LucideIcon name="HelpCircle" className="w-4 h-4" />
@@ -169,7 +169,7 @@ export function GlassCard({
               <button
                 type="button"
                 onClick={(e) => onBookmarkToggle(tool.id, e)}
-                className={`p-2.5 rounded-xl border transition ${
+                className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border transition touch-manipulation ${
                   isBookmarked
                     ? 'bg-sky-100 text-sky-700 border-sky-300'
                     : 'bg-white text-slate-500 border-slate-200 hover:border-sky-300'
@@ -182,7 +182,7 @@ export function GlassCard({
                 type="button"
                 whileTap={{ scale: 0.92 }}
                 onClick={(e) => onVote(tool.id, e)}
-                className="flex items-center gap-1 px-2.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-700 hover:border-sky-300 hover:bg-sky-50"
+                className="flex items-center gap-1 min-h-[44px] px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-700 hover:border-sky-300 hover:bg-sky-50 touch-manipulation"
               >
                 <LucideIcon name="ArrowUp" className="w-3.5 h-3.5" />
                 {tool.votes}

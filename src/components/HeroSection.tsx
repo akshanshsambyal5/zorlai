@@ -29,8 +29,8 @@ export function HeroSection({
   ];
 
   return (
-    <section className="relative pt-28 pb-16 md:pt-36 md:pb-20 overflow-hidden">
-      <div className="relative z-10 max-w-5xl mx-auto px-6 flex flex-col items-center text-center">
+    <section className="relative pt-24 pb-14 sm:pt-28 sm:pb-16 md:pt-36 md:pb-20 overflow-hidden">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center w-full min-w-0">
         <ScrollReveal>
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
@@ -82,7 +82,7 @@ export function HeroSection({
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.35, ease: 'easeOut' }}
-                className="btn-primary text-white text-sm font-medium px-5 py-3 rounded-xl shrink-0"
+                className="btn-primary text-white text-sm font-medium px-5 py-3 min-h-[44px] rounded-xl shrink-0 w-full md:w-auto touch-manipulation"
               >
                 Search
               </motion.button>
@@ -108,7 +108,7 @@ export function HeroSection({
         </ScrollReveal>
 
         <ScrollReveal delay={0.34} className="w-full max-w-2xl mt-16">
-          <div className="grid grid-cols-3 gap-4 md:gap-8 pt-10 border-t border-slate-200/80">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8 pt-8 sm:pt-10 border-t border-slate-200/80 w-full">
             {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -119,11 +119,11 @@ export function HeroSection({
                 className="text-center"
               >
                 <div
-                  className={`text-2xl md:text-3xl font-semibold tracking-tight bg-gradient-to-r ${stat.accent} bg-clip-text text-transparent`}
+                  className={`text-xl sm:text-2xl md:text-3xl font-semibold tracking-tight bg-gradient-to-r ${stat.accent} bg-clip-text text-transparent`}
                 >
                   {stat.value}
                 </div>
-                <div className="type-caption mt-1">{stat.label}</div>
+                <div className="type-caption mt-1 text-[11px] sm:text-xs leading-tight">{stat.label}</div>
               </motion.div>
             ))}
           </div>

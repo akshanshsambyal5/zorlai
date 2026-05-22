@@ -14,6 +14,11 @@ const ERROR_MAP: Record<string, string> = {
   user_not_found: 'No account found with this email.',
   flow_state_expired: 'This link has expired. Request a new password reset.',
   identity_already_exists: 'This account is already linked to another sign-in method.',
+  access_denied: 'Sign-in was cancelled. Please try again.',
+  server_error: 'Authentication service error. Please try again in a moment.',
+  redirect_uri_mismatch: 'OAuth redirect is misconfigured. Contact support if this persists.',
+  invalid_request: 'Invalid sign-in request. Please try again.',
+  unauthorized_client: 'Google sign-in is not authorized for this app. Check OAuth client settings.',
 };
 
 export function getAuthErrorMessage(err: unknown): string {
@@ -46,6 +51,15 @@ export function getAuthErrorMessage(err: unknown): string {
   }
   if (lower.includes('email rate limit')) {
     return ERROR_MAP.over_email_send_rate_limit;
+  }
+  if (lower.includes('redirect') && (lower.includes('not allowed') || lower.includes('mismatch'))) {
+    return 'Sign-in redirect URL is not allowed. Ensure https://zorlai.xyz and https://www.zorlai.xyz are added in Supabase → Authentication → URL Configuration.';
+  }
+  if (lower.includes('access_denied') || lower.includes('access denied')) {
+    return ERROR_MAP.access_denied;
+  }
+  if (lower.includes('oauth') || lower.includes('provider')) {
+    return msg || 'Sign-in with Google failed. Please try again or use email.';
   }
 
   return msg || 'Authentication failed. Please try again.';
