@@ -67,7 +67,7 @@ export function SignupPage() {
             <LucideIcon name="Mail" className="w-7 h-7 text-emerald-400" />
           </div>
           <p className="text-sm text-slate-400 leading-relaxed">
-            Confirm <span className="text-white font-medium">{email}</span> then sign in to unlock bookmarks and your dashboard.
+            Confirm <span className="font-medium text-slate-900">{email}</span> then sign in to unlock bookmarks and your dashboard.
           </p>
           <button type="button" onClick={() => navigate(loginPath())} className="btn-primary text-white text-sm px-6 py-3 rounded-xl">
             Go to sign in

@@ -30,7 +30,7 @@ export function OAuthButtons({ disabled }: OAuthButtonsProps) {
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
         onClick={() => handleOAuth('google')}
-        className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl glass-panel border border-white/10 hover:border-white/20 text-sm font-medium text-white transition-all disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl glass-panel border border-slate-200 hover:border-sky-300 text-sm font-medium text-slate-800 transition-all disabled:opacity-50"
       >
         {loadingProvider === 'google' ? (
           <LucideIcon name="Sparkles" className="w-4 h-4 animate-spin text-cyan-300" />
@@ -51,7 +51,7 @@ export function OAuthButtons({ disabled }: OAuthButtonsProps) {
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
         onClick={() => handleOAuth('facebook')}
-        className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl glass-panel border border-white/10 hover:border-[#1877F2]/40 text-sm font-medium text-white transition-all disabled:opacity-50"
+        className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl glass-panel border border-slate-200 hover:border-[#1877F2]/40 text-sm font-medium text-slate-800 transition-all disabled:opacity-50"
       >
         {loadingProvider === 'facebook' ? (
           <LucideIcon name="Sparkles" className="w-4 h-4 animate-spin text-cyan-300" />
@@ -64,9 +64,9 @@ export function OAuthButtons({ disabled }: OAuthButtonsProps) {
       </motion.button>
 
       <div className="relative flex items-center gap-3 py-1">
-        <div className="flex-1 h-px bg-white/10" />
+        <div className="flex-1 h-px bg-slate-200" />
         <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">or email</span>
-        <div className="flex-1 h-px bg-white/10" />
+        <div className="flex-1 h-px bg-slate-200" />
       </div>
     </div>
   );

@@ -64,13 +64,13 @@ export function Dashboard({
             <div className="absolute top-0 left-[20%] right-[20%] h-[1px] bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent pointer-events-none" />
 
             {/* Dashboard Header */}
-            <div className="relative flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 z-10 pb-6 border-b border-white/5 bg-slate-950/20">
+            <div className="relative flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 z-10 pb-6 border-b border-slate-200/80">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600/30 to-indigo-600/30 border border-violet-500/20 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.15)]">
-                  <LucideIcon name="Settings" className="w-5 h-5 text-violet-400" />
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400/30 to-blue-500/30 border border-sky-300/40 flex items-center justify-center">
+                  <LucideIcon name="Settings" className="w-5 h-5 text-sky-600" />
                 </div>
                 <div>
-                  <h2 className="font-display text-xl font-bold text-white">Dashboard</h2>
+                  <h2 className="font-display text-xl font-bold text-slate-900">Dashboard</h2>
                   <p className="text-xs text-slate-500">Bookmarks, submissions & admin</p>
                 </div>
               </div>
@@ -82,7 +82,7 @@ export function Dashboard({
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-mono tracking-widest border transition-all duration-300 ${
                     isAdminMode
                       ? 'bg-rose-500/10 hover:bg-rose-500/15 border-rose-500/40 text-rose-400 shadow-[0_0_15px_rgba(239,68,68,0.15)]'
-                      : 'bg-slate-900 border-white/5 text-slate-400 hover:text-white hover:border-white/10'
+                      : 'bg-white/70 border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300'
                   }`}
                 >
                   <LucideIcon name="Shield" className={`w-3.5 h-3.5 ${isAdminMode ? 'animate-pulse' : ''}`} />
@@ -91,7 +91,7 @@ export function Dashboard({
 
                 <button
                   onClick={onClose}
-                  className="p-2 bg-slate-900 hover:bg-white/5 border border-white/5 text-slate-400 hover:text-white rounded-xl transition"
+                  className="p-2 bg-white/80 hover:bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-900 rounded-xl transition"
                 >
                   <LucideIcon name="X" className="w-4 h-4" />
                 </button>

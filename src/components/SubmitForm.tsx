@@ -76,8 +76,8 @@ export function SubmitForm({ categories, onSubmit }: SubmitFormProps) {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 relative">
       <div className="text-center max-w-xl mx-auto mb-10">
-        <h2 className="font-display text-3xl font-bold text-white tracking-tight mb-2">Submit a tool</h2>
-        <p className="text-sm text-slate-400">Share an AI tool with the community for review</p>
+        <h2 className="font-display text-3xl font-bold text-slate-900 tracking-tight mb-2">Submit a tool</h2>
+        <p className="text-sm text-slate-600">Share an AI tool with the community for review</p>
       </div>
 
       <motion.div
@@ -99,7 +99,7 @@ export function SubmitForm({ categories, onSubmit }: SubmitFormProps) {
               <LucideIcon name="Sparkle" className="w-8 h-8 text-emerald-400 animate-pulse" />
             </div>
             <div>
-              <h4 className="text-lg font-sans font-bold text-white uppercase tracking-wider mb-1">
+              <h4 className="text-lg font-sans font-bold text-slate-900 uppercase tracking-wider mb-1">
                 Node Synced Successfully
               </h4>
               <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
@@ -157,7 +157,7 @@ export function SubmitForm({ categories, onSubmit }: SubmitFormProps) {
                 value={formData.tagline}
                 onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
                 placeholder="e.g. Autonomous multi-file code generator terminal synthesizer."
-                className="w-full bg-slate-900/60 border border-white/5 rounded-xl px-3.5 py-3 text-xs text-slate-200 focus:border-cyan-500/30 outline-none transition"
+                className="w-full input-glass rounded-xl px-3.5 py-3 text-xs text-slate-900"
               />
             </div>
 
@@ -171,7 +171,7 @@ export function SubmitForm({ categories, onSubmit }: SubmitFormProps) {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Detail core logic features, capabilities, and target developer orbits which this node serves..."
-                className="w-full bg-slate-900/60 border border-white/5 rounded-xl px-3.5 py-3 text-xs text-slate-200 focus:border-cyan-500/30 outline-none transition resize-none custom-scrollbar"
+                className="w-full input-glass rounded-xl px-3.5 py-3 text-xs text-slate-900 resize-none custom-scrollbar"
               />
             </div>
 
@@ -184,7 +184,7 @@ export function SubmitForm({ categories, onSubmit }: SubmitFormProps) {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full bg-slate-900 border border-white/5 rounded-xl px-3 py-3 text-xs text-slate-300 outline-none focus:border-cyan-500/30"
+                  className="w-full input-glass rounded-xl px-3 py-3 text-xs text-slate-900"
                 >
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
@@ -202,7 +202,7 @@ export function SubmitForm({ categories, onSubmit }: SubmitFormProps) {
                 <select
                   value={formData.pricing}
                   onChange={(e) => setFormData({ ...formData, pricing: e.target.value as any })}
-                  className="w-full bg-slate-900 border border-white/5 rounded-xl px-3 py-3 text-xs text-slate-300 outline-none focus:border-cyan-500/30"
+                  className="w-full input-glass rounded-xl px-3 py-3 text-xs text-slate-900"
                 >
                   <option value="Free">Free</option>
                   <option value="Freemium">Freemium</option>

@@ -70,8 +70,8 @@ export function GlassCard({
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -6, transition: { duration: 0.3 } }}
+      transition={{ duration: 0.65, ease: 'easeOut' }}
+      whileHover={{ y: -4, scale: 1.02, transition: { duration: 0.4, ease: 'easeOut' } }}
     >
       <div
         className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -118,13 +118,13 @@ export function GlassCard({
           </span>
         )}
 
-        <h3 className="font-display font-bold text-xl sm:text-[1.35rem] text-slate-900 mb-1.5 leading-tight line-clamp-2 group-hover:text-sky-800 transition-colors">
+        <h3 className="type-h3 text-[1.2rem] mb-1.5 line-clamp-2 group-hover:text-sky-700 transition-colors duration-300">
           {tool.name}
         </h3>
 
-        <p className="text-sm font-medium text-slate-600 mb-2 line-clamp-2 leading-snug">{tool.tagline}</p>
+        <p className="type-body font-medium mb-2 line-clamp-2">{tool.tagline}</p>
 
-        <p className="text-sm text-slate-500 leading-relaxed line-clamp-3 flex-1">{tool.description}</p>
+        <p className="type-body-muted line-clamp-3 flex-1">{tool.description}</p>
 
         <div className="mt-4 pt-4 border-t border-sky-100/80 flex flex-col gap-3">
           <div className="flex flex-wrap gap-1.5">

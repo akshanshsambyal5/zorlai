@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { motion } from 'motion/react';
+import { ScrollReveal } from '../ui/ScrollReveal';
 
 interface PageShellProps {
   title: string;
@@ -12,23 +13,21 @@ interface PageShellProps {
 export function PageShell({ title, subtitle, badge, children, className = '' }: PageShellProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className={`pt-28 pb-16 ${className}`}
+      initial={{ opacity: 0, filter: 'blur(8px)' }}
+      animate={{ opacity: 1, filter: 'blur(0px)' }}
+      exit={{ opacity: 0, filter: 'blur(6px)' }}
+      transition={{ duration: 0.75, ease: 'easeOut' }}
+      className={`pt-28 pb-20 ${className}`}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center mb-10">
+      <ScrollReveal className="max-w-6xl mx-auto px-4 sm:px-6 text-center mb-12">
         {badge && (
-          <span className="inline-block mb-3 text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded-full bg-sky-100 text-sky-700 border border-sky-200">
+          <span className="inline-block mb-4 type-eyebrow px-3 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-100/80">
             {badge}
           </span>
         )}
-        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight mb-3">
-          {title}
-        </h1>
-        {subtitle && <p className="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">{subtitle}</p>}
-      </div>
+        <h1 className="type-h1 mb-4">{title}</h1>
+        {subtitle && <p className="type-lead max-w-2xl mx-auto">{subtitle}</p>}
+      </ScrollReveal>
       {children}
     </motion.div>
   );

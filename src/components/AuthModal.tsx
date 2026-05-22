@@ -78,7 +78,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
           >
             <div className="flex justify-between items-center mb-5">
               <div>
-                <h2 className="font-display text-xl font-bold text-white">
+                <h2 className="font-display text-xl font-bold text-slate-900">
                   {mode === 'signin' ? 'Welcome back' : 'Create account'}
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">Save tools, vote, and access your dashboard</p>
@@ -86,7 +86,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
               <button
                 type="button"
                 onClick={onClose}
-                className="p-2 bg-slate-900 border border-white/5 text-slate-400 hover:text-white rounded-xl transition"
+                className="p-2 bg-white/80 border border-slate-200 text-slate-500 hover:text-slate-900 rounded-xl transition"
               >
                 <LucideIcon name="X" className="w-4 h-4" />
               </button>
@@ -107,8 +107,8 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
                   }}
                   className={`flex-1 py-2 rounded-xl text-[10px] font-mono uppercase tracking-widest border transition ${
                     mode === m
-                      ? 'bg-violet-600/20 border-violet-500/30 text-white'
-                      : 'bg-slate-900 border-white/5 text-slate-400'
+                      ? 'bg-sky-500/15 border-sky-400/40 text-sky-800'
+                      : 'bg-white/60 border-slate-200 text-slate-500'
                   }`}
                 >
                   {m === 'signin' ? 'Sign In' : 'Sign Up'}
@@ -125,7 +125,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     placeholder="Optional"
-                    className="w-full input-glass rounded-xl px-3.5 py-3 text-sm text-slate-200"
+                    className="w-full input-glass rounded-xl px-3.5 py-3 text-sm text-slate-900"
                   />
                 </div>
               )}
@@ -137,7 +137,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full input-glass rounded-xl px-3.5 py-3 text-sm text-slate-200"
+                  className="w-full input-glass rounded-xl px-3.5 py-3 text-sm text-slate-900"
                 />
               </div>
 
@@ -149,7 +149,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
                   minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full input-glass rounded-xl px-3.5 py-3 text-sm text-slate-200"
+                  className="w-full input-glass rounded-xl px-3.5 py-3 text-sm text-slate-900"
                 />
                 {mode === 'signin' && (
                   <button
@@ -158,7 +158,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
                       onClose();
                       navigate(forgotPasswordPath());
                     }}
-                    className="text-[10px] text-cyan-400/80 hover:text-cyan-300"
+                    className="text-[10px] text-sky-600 hover:text-sky-700"
                   >
                     Forgot password?
                   </button>
@@ -189,7 +189,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
                   onClose();
                   navigate(mode === 'signin' ? loginPath() : signupPath());
                 }}
-                className="text-violet-400 hover:text-violet-300"
+                className="text-sky-600 hover:text-sky-700"
               >
                 Open {mode === 'signin' ? 'login' : 'signup'} page
               </button>

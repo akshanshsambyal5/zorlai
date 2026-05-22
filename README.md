@@ -87,9 +87,14 @@ Open [http://localhost:3000](http://localhost:3000)
 ## Production Build
 
 ```bash
-npm run build
-npm start
+npm run build        # static frontend → dist/ (Vercel)
+npm run build:full   # static + Express bundle (local)
+npm start            # run Express + dist locally
 ```
+
+## Deploy on Vercel
+
+Static SPA only — see **[docs/DEPLOY_VERCEL.md](docs/DEPLOY_VERCEL.md)** (`outputDirectory: dist`, no `api/` serverless).
 
 ## Project Structure
 

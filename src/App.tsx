@@ -228,7 +228,7 @@ export default function App() {
           <ToolsListingPage
             mode="trending"
             title="Trending AI Tools"
-            subtitle="Community favorites and high-velocity tools gaining traction"
+            subtitle="Ranked by engagement — votes, saves, and momentum"
             badge="Hot now"
             tools={catalogTools}
             categories={categories}
@@ -268,7 +268,7 @@ export default function App() {
           <ToolsListingPage
             mode="popular"
             title="Popular AI Tools"
-            subtitle="Top-voted tools loved by the ZorlAI community"
+            subtitle="Most saved and highest-rated by the community"
             badge="Community picks"
             tools={catalogTools}
             categories={categories}

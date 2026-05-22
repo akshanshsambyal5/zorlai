@@ -47,8 +47,8 @@ export function ForgotPasswordPage() {
       <AuthLayout title="Email sent" subtitle="Check your inbox for the reset link">
         <div className="text-center py-4 space-y-4">
           <LucideIcon name="Mail" className="w-10 h-10 text-cyan-400 mx-auto" />
-          <p className="text-sm text-slate-400">
-            If <span className="text-white">{email}</span> is registered, you will receive a password reset link shortly.
+          <p className="text-sm text-slate-600">
+            If <span className="font-medium text-slate-900">{email}</span> is registered, you will receive a password reset link shortly.
           </p>
           <button type="button" onClick={() => navigate(loginPath())} className="btn-ghost-glass text-sm px-5 py-2.5 rounded-xl">
             Back to sign in
