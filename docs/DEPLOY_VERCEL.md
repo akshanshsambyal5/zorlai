@@ -1,60 +1,56 @@
 # Deploy ZorlAI on Vercel (static frontend)
 
-ZorlAI deploys to Vercel as a **static Vite SPA** (`dist/`). There is no `api/` serverless folder.
+ZorlAI deploys as a **static Vite SPA**. There is no Express `/api` on Vercel.
+
+## How tools load in production
+
+| Priority | Source | When |
+|----------|--------|------|
+| 1 | Express `/api/*` | Local dev only (`npm run dev`) |
+| 2 | **Supabase** (browser) | Vercel when `VITE_SUPABASE_*` env vars are set |
+| 3 | **Bundled catalog** | Always — 118+ tools in `src/data/aiToolsCatalog.ts` |
+
+If Supabase env vars are missing, the site still shows tools from the built-in catalog.
 
 ## Vercel settings
 
 | Setting | Value |
 |---------|--------|
-| Framework Preset | Vite (or Other) |
 | Build Command | `npm run build` |
 | Output Directory | `dist` |
-| Install Command | `npm install` |
 
-`vercel.json` sets these and adds SPA rewrites so client-side routes work.
+## Required environment variables (for live Supabase data)
 
-## Environment variables
-
-Add in **Vercel → Settings → Environment Variables**:
-
-| Variable | Required |
-|----------|----------|
-| `VITE_SUPABASE_URL` | Yes |
-| `VITE_SUPABASE_ANON_KEY` | Yes |
+| Variable | Required on Vercel |
+|----------|-------------------|
+| `VITE_SUPABASE_URL` | Recommended |
+| `VITE_SUPABASE_ANON_KEY` | Recommended |
 | `VITE_APP_URL` | Yes — your production URL |
 
-Optional (only if you add a separate API host later): `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`.
+Do **not** set `VITE_USE_EXPRESS_API` on Vercel.
 
-## Supabase auth
+Optional server-only keys (`SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`) are not used by the static build.
 
-In Supabase **Authentication → URL configuration**:
+## Supabase setup
 
-- **Site URL**: your `VITE_APP_URL`
-- **Redirect URLs**: `https://your-domain.vercel.app/**`
+1. Run migrations `001`–`004` in the SQL editor.
+2. Run seed `003_seed_catalog.sql` (or `npm run seed` locally).
+3. **Authentication → URL configuration**: Site URL = `VITE_APP_URL`, redirect URLs = `https://your-domain.vercel.app/**`
 
-See [AUTH_SETUP.md](./AUTH_SETUP.md).
+## Verify after deploy
 
-## Local full-stack (API + SPA)
+1. Open the site — home should show **Trending**, **New**, and **Most loved** sections with cards.
+2. Open browser DevTools → Network: you should **not** see successful JSON from `/api/tools` (expected on static hosting).
+3. If tools are missing, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Vercel and redeploy.
 
-Express API is for **local development**, not Vercel serverless:
+## Local development
 
 ```bash
-npm run dev          # Vite + Express on :3000
-npm run build:full   # dist/ + dist/server.cjs
-npm start            # production server locally
+npm run dev          # Express API + Vite (uses /api)
+npm run build        # Static dist for Vercel
 ```
 
 ## Folder rules
 
-- `index.html` at **project root** only
-- Do **not** add `api/index.ts` or `functions` in `vercel.json`
-- Do not use `<link rel="canonical" href="/" />` in `index.html` (breaks Vite build)
-
-## Troubleshooting
-
-| Error | Fix |
-|-------|-----|
-| `functions doesn't match any Serverless Functions` | Remove `functions` and `api/` from project; use static `outputDirectory: dist` |
-| `Could not resolve entry module index.html` | Keep `index.html` at repo root, not in `api/` |
-| Routes 404 on refresh | Ensure SPA rewrite to `/index.html` in `vercel.json` |
-| `/api/*` fails on Vercel | Expected for static deploy — use Supabase client or host API elsewhere |
+- `index.html` at project root only
+- No `api/` serverless folder for static deploy

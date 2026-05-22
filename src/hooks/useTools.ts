@@ -17,7 +17,10 @@ export function useTools(query: ToolsQuery = {}) {
     } catch (err) {
       const message = err instanceof ApiError ? err.message : 'Failed to load tools';
       setError(message);
-      setTools([]);
+      const { getFallbackTools } = await import('../lib/catalogFallback');
+      const fallback = getFallbackTools(query);
+      if (fallback.length > 0) setError(null);
+      setTools(ensureArray<AITool>(fallback));
     } finally {
       setLoading(false);
     }
@@ -64,8 +67,15 @@ export function useToolDetail(slug: string | null) {
         const data = await fetchToolBySlug(slug);
         setTool(data);
       } catch (err) {
-        setError(err instanceof ApiError ? err.message : 'Failed to load tool');
-        setTool(null);
+        const { getFallbackToolBySlug } = await import('../lib/catalogFallback');
+        const fallback = getFallbackToolBySlug(slug);
+        if (fallback) {
+          setTool(fallback);
+          setError(null);
+        } else {
+          setError(err instanceof ApiError ? err.message : 'Failed to load tool');
+          setTool(null);
+        }
       } finally {
         setLoading(false);
       }

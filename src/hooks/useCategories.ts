@@ -16,7 +16,10 @@ export function useCategories() {
       setCategories(ensureArray(data));
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Failed to load categories');
-      setCategories([]);
+      const { getFallbackCategories } = await import('../lib/catalogFallback');
+      const fallback = getFallbackCategories();
+      setCategories(fallback);
+      if (fallback.length > 0) setError(null);
     } finally {
       setLoading(false);
     }
