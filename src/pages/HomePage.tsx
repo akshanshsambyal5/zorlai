@@ -77,7 +77,7 @@ export function HomePage({
         categoryCount={categories.length}
       />
 
-      <CategoryStrip categories={categories} loading={loading} />
+      <CategoryStrip categories={categories} loading={loading && categories.length === 0} />
 
       <div className="space-y-20 md:space-y-32">
         {loading ? (
@@ -163,39 +163,6 @@ export function HomePage({
               </section>
             </ScrollReveal>
 
-            {categories.length > 0 && (
-              <ScrollReveal delay={0.25} className="hidden lg:block max-w-6xl mx-auto px-4 sm:px-6">
-                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
-                  <div>
-                    <p className="type-eyebrow">Deep dive</p>
-                    <h2 className="type-h2">All categories</h2>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => navigate(paths.categories())}
-                    className="text-sm text-sky-600 hover:text-sky-800 font-medium transition-colors"
-                  >
-                    Category index →
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                  {categories.map((cat) => (
-                    <motion.button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => navigate(paths.category(cat.id))}
-                      whileHover={{ scale: 1.02, y: -2 }}
-                      transition={{ duration: 0.35, ease: 'easeOut' }}
-                      className="glass-card-premium rounded-2xl p-4 text-left hover-glow min-h-[88px] touch-manipulation w-full"
-                    >
-                      <LucideIcon name={cat.icon} className="w-5 h-5 text-sky-600 mb-2" />
-                      <span className="type-body font-medium text-slate-800 block truncate">{cat.name}</span>
-                      <span className="type-caption">{cat.count} tools</span>
-                    </motion.button>
-                  ))}
-                </div>
-              </ScrollReveal>
-            )}
           </>
         )}
       </div>

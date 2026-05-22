@@ -6,6 +6,7 @@ import { getAuthRedirectUrl } from '../lib/authRedirect';
 import {
   cleanAuthCallbackFromUrl,
   getInitialAuthCallbackError,
+  hasAuthCallbackInUrl,
   parseAuthCallbackError,
   storeOAuthRedirect,
 } from '../lib/authCallback';
@@ -31,7 +32,10 @@ function resolveAvatar(user: User | null): string | null {
   ) as string | null;
 }
 
-function buildProfileFromUser(authUser: User, row?: { email?: string; display_name?: string | null; is_admin?: boolean }): UserProfile {
+function buildProfileFromUser(
+  authUser: User,
+  row?: { email?: string; display_name?: string | null; is_admin?: boolean }
+): UserProfile {
   const email = row?.email || authUser.email || authUser.user_metadata?.email || '';
   const meta = authUser.user_metadata || {};
   const displayName =
@@ -50,26 +54,22 @@ function buildProfileFromUser(authUser: User, row?: { email?: string; display_na
   };
 }
 
-function applyAuthSession(
-  newSession: Session | null,
-  setSession: (s: Session | null) => void,
-  setUser: (u: User | null) => void,
-  setProfile: (p: UserProfile | null) => void
-) {
-  setSession(newSession);
-  const authUser = newSession?.user ?? null;
-  setUser(authUser);
-  setProfile(authUser ? buildProfileFromUser(authUser) : null);
-}
-
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
   const [profileSyncing, setProfileSyncing] = useState(false);
   const [error, setError] = useState<string | null>(() => getInitialAuthCallbackError());
   const syncInFlightRef = useRef<string | null>(null);
+
+  const applySession = useCallback((newSession: Session | null) => {
+    setSession(newSession);
+    const authUser = newSession?.user ?? null;
+    setUser(authUser);
+    setProfile(authUser ? buildProfileFromUser(authUser) : null);
+  }, []);
 
   const syncProfile = useCallback(async (authUser: User) => {
     if (syncInFlightRef.current === authUser.id) return;
@@ -90,7 +90,12 @@ export function useAuth() {
         return;
       }
 
-      setProfile(buildProfileFromUser(authUser, data as { email?: string; display_name?: string | null; is_admin?: boolean } | null));
+      setProfile(
+        buildProfileFromUser(
+          authUser,
+          data as { email?: string; display_name?: string | null; is_admin?: boolean } | null
+        )
+      );
     } catch {
       setProfile(buildProfileFromUser(authUser));
     } finally {
@@ -102,45 +107,37 @@ export function useAuth() {
   useEffect(() => {
     if (!isSupabaseConfigured()) {
       setLoading(false);
+      setInitialized(true);
       return;
     }
 
     const supabase = getSupabase();
     let mounted = true;
+    let oauthPollId: ReturnType<typeof setInterval> | null = null;
 
-    const finishLoading = () => {
-      if (mounted) setLoading(false);
+    const markReady = () => {
+      if (!mounted) return;
+      setLoading(false);
+      setInitialized(true);
     };
-
-    const timeout = window.setTimeout(finishLoading, 5000);
 
     const scheduleProfileSync = (authUser: User) => {
-      window.setTimeout(() => {
+      queueMicrotask(() => {
         if (mounted) void syncProfile(authUser);
-      }, 0);
+      });
     };
 
-    supabase.auth.getSession().then(({ data: { session: initialSession }, error: sessionError }) => {
-      if (!mounted) return;
-      if (sessionError) {
-        console.warn('[auth] getSession:', sessionError.message);
-      }
-      applyAuthSession(initialSession, setSession, setUser, setProfile);
-      if (initialSession?.user) {
-        scheduleProfileSync(initialSession.user);
-      }
-      finishLoading();
-      window.clearTimeout(timeout);
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange((event, newSession) => {
-      applyAuthSession(newSession, setSession, setUser, setProfile);
-      finishLoading();
-      window.clearTimeout(timeout);
+    const handleSession = (newSession: Session | null, event?: string) => {
+      applySession(newSession);
 
       const authUser = newSession?.user ?? null;
-
-      if (authUser && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED')) {
+      if (
+        authUser &&
+        (event === 'SIGNED_IN' ||
+          event === 'INITIAL_SESSION' ||
+          event === 'TOKEN_REFRESHED' ||
+          event === 'USER_UPDATED')
+      ) {
         scheduleProfileSync(authUser);
       }
 
@@ -148,6 +145,16 @@ export function useAuth() {
         setProfile(null);
         syncInFlightRef.current = null;
       }
+
+      if (newSession?.user) {
+        markReady();
+      } else if (!hasAuthCallbackInUrl()) {
+        markReady();
+      }
+    };
+
+    const { data: listener } = supabase.auth.onAuthStateChange((event, newSession) => {
+      handleSession(newSession, event);
 
       if (event === 'SIGNED_IN' && typeof window !== 'undefined') {
         const urlError = parseAuthCallbackError();
@@ -166,12 +173,57 @@ export function useAuth() {
       }
     });
 
+    void supabase.auth.getSession().then(({ data: { session: initialSession }, error: sessionError }) => {
+      if (!mounted) return;
+      if (sessionError) {
+        console.warn('[auth] getSession:', sessionError.message);
+      }
+      if (initialSession) {
+        handleSession(initialSession, 'INITIAL_SESSION');
+      } else if (!hasAuthCallbackInUrl()) {
+        markReady();
+      }
+    });
+
+    if (hasAuthCallbackInUrl()) {
+      let attempts = 0;
+      oauthPollId = window.setInterval(() => {
+        attempts += 1;
+        void supabase.auth.getSession().then(({ data: { session: polled } }) => {
+          if (!mounted) return;
+          if (polled?.user) {
+            handleSession(polled, 'SIGNED_IN');
+            cleanAuthCallbackFromUrl();
+            if (oauthPollId) window.clearInterval(oauthPollId);
+          } else if (attempts >= 40) {
+            markReady();
+            if (oauthPollId) window.clearInterval(oauthPollId);
+          }
+        });
+      }, 150);
+    }
+
+    const timeout = window.setTimeout(() => {
+      if (mounted) markReady();
+    }, 8000);
+
+    const onStorage = (e: StorageEvent) => {
+      if (e.key?.includes('zorlai-auth') || e.key?.includes('supabase')) {
+        void supabase.auth.getSession().then(({ data: { session: s } }) => {
+          if (mounted && s) handleSession(s, 'TOKEN_REFRESHED');
+        });
+      }
+    };
+    window.addEventListener('storage', onStorage);
+
     return () => {
       mounted = false;
       window.clearTimeout(timeout);
+      if (oauthPollId) window.clearInterval(oauthPollId);
+      window.removeEventListener('storage', onStorage);
       listener.subscription.unsubscribe();
     };
-  }, [syncProfile]);
+  }, [applySession, syncProfile]);
 
   const signUp = async (email: string, password: string, displayName?: string) => {
     setError(null);
@@ -189,9 +241,9 @@ export function useAuth() {
       setError(message);
       throw new Error(message);
     }
-    if (data.session?.user) {
-      applyAuthSession(data.session, setSession, setUser, setProfile);
-      await syncProfile(data.session.user);
+    if (data.session) {
+      applySession(data.session);
+      if (data.session.user) await syncProfile(data.session.user);
     } else if (data.user) {
       await syncProfile(data.user);
     }
@@ -208,7 +260,7 @@ export function useAuth() {
       throw new Error(message);
     }
     if (data.session) {
-      applyAuthSession(data.session, setSession, setUser, setProfile);
+      applySession(data.session);
     }
     if (data.user) await syncProfile(data.user);
     return data;
@@ -216,8 +268,7 @@ export function useAuth() {
 
   const signInWithOAuth = async (provider: Provider, redirectAfter?: string) => {
     setError(null);
-    const destination = redirectAfter ?? dashboardPath();
-    storeOAuthRedirect(destination);
+    storeOAuthRedirect(redirectAfter ?? dashboardPath());
 
     const supabase = getSupabase();
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
@@ -267,16 +318,20 @@ export function useAuth() {
       setError(message);
       throw new Error(message);
     }
-    applyAuthSession(null, setSession, setUser, setProfile);
+    applySession(null);
+    setProfile(null);
+    syncInFlightRef.current = null;
   };
 
-  const isAuthenticated = Boolean(session?.user);
+  const authUser = session?.user ?? user;
+  const isAuthenticated = Boolean(authUser?.id);
 
   return {
     session,
-    user,
+    user: authUser,
     profile,
     loading,
+    initialized,
     profileSyncing,
     error,
     isAuthenticated,

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { LucideIcon } from './LucideIcon';
 import { useAuthContext } from '../context/AuthContext';
@@ -15,13 +15,19 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModalProps) {
-  const { signIn, signUp, error, clearError } = useAuthContext();
+  const { signIn, signUp, isAuthenticated, initialized, error, clearError } = useAuthContext();
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen && initialized && isAuthenticated) {
+      onClose();
+    }
+  }, [isOpen, initialized, isAuthenticated, onClose]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

@@ -21,7 +21,8 @@ export function Navbar({
   onOpenAuth,
   onNavigate,
 }: NavbarProps) {
-  const { isAuthenticated, loading: authLoading, signOut } = useAuthContext();
+  const { isAuthenticated, loading: authLoading, initialized, signOut } = useAuthContext();
+  const authReady = initialized && !authLoading;
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
@@ -172,7 +173,7 @@ export function Navbar({
                 <MagneticButton variant="cyan" onClick={() => { onOpenAIScout(); setIsOpen(false); }} className="w-full">
                   AI Scout
                 </MagneticButton>
-                {authLoading ? (
+                {!authReady ? (
                   <div className="h-10 rounded-xl bg-sky-100 animate-pulse" />
                 ) : isAuthenticated ? (
                   <>

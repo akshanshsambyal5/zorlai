@@ -26,6 +26,7 @@ export function getSupabase(): SupabaseClient<Database> {
         detectSessionInUrl: true,
         flowType: 'pkce',
         storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+        storageKey: 'zorlai-auth',
       },
     });
   }

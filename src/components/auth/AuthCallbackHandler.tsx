@@ -12,7 +12,7 @@ import { navigate } from '../../lib/router';
  * Handles OAuth return: surfaces URL errors, redirects after sign-in, strips auth params from the URL.
  */
 export function AuthCallbackHandler() {
-  const { isAuthenticated, loading, clearError } = useAuthContext();
+  const { isAuthenticated, loading, initialized, clearError } = useAuthContext();
   const handledRef = useRef(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function AuthCallbackHandler() {
   }, [clearError]);
 
   useEffect(() => {
-    if (loading || handledRef.current) return;
+    if (!initialized || loading || handledRef.current) return;
 
     const urlError = parseAuthCallbackError();
     if (urlError && !isAuthenticated) {
@@ -50,7 +50,7 @@ export function AuthCallbackHandler() {
     if (current !== destination) {
       navigate(destination, true);
     }
-  }, [isAuthenticated, loading]);
+  }, [isAuthenticated, loading, initialized]);
 
   return null;
 }
