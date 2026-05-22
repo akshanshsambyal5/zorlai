@@ -93,7 +93,7 @@ export function Dashboard({
                   onClick={onClose}
                   className="p-2 bg-white/80 hover:bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-900 rounded-xl transition"
                 >
-                  <LucideIcon name="X" className="w-4 h-4" />
+                  <LucideIcon name="Close" className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -163,7 +163,7 @@ export function Dashboard({
                               onClick={() => onRejectSubmission(sub.id)}
                               className="flex-1 flex items-center justify-center gap-1.5 bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-400 text-[10px] font-mono py-2 px-3 rounded-xl transition cursor-pointer"
                             >
-                              <LucideIcon name="X" className="w-3.5 h-3.5" />
+                              <LucideIcon name="Close" className="w-3.5 h-3.5" />
                               <span>REJECT</span>
                             </button>
                           </div>
@@ -315,7 +315,7 @@ export function Dashboard({
                               className="p-2 bg-slate-950 hover:bg-rose-500/10 border border-white/5 hover:border-rose-500/30 text-slate-400 hover:text-rose-400 rounded-lg transition"
                               title="Delete bookmark"
                             >
-                              <LucideIcon name="X" className="w-3.5 h-3.5" />
+                              <LucideIcon name="Close" className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         ))}

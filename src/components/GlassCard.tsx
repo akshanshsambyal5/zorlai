@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { AITool } from '../types';
 import { LucideIcon } from './LucideIcon';
 import { openToolWebsite, getValidToolUrl } from '../lib/toolUrl';
+import { ensureArray } from '../lib/safeArray';
 
 interface GlassCardProps {
   tool: AITool;
@@ -28,6 +29,7 @@ export function GlassCard({
   const [logoError, setLogoError] = useState(false);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const externalUrl = getValidToolUrl(tool.url);
+  const tags = ensureArray<string>(tool.tags);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -128,7 +130,7 @@ export function GlassCard({
 
         <div className="mt-4 pt-4 border-t border-sky-100/80 flex flex-col gap-3">
           <div className="flex flex-wrap gap-1.5">
-            {tool.tags.slice(0, 3).map((tag) => (
+            {tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
                 className="text-[10px] text-slate-600 bg-slate-50 border border-slate-200/80 px-2 py-0.5 rounded-md"

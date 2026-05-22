@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AITool } from '../types';
 import { ApiError, addBookmark, fetchBookmarks, removeBookmark } from '../lib/api';
+import { ensureArray } from '../lib/safeArray';
 
 export function useBookmarks(isAuthenticated: boolean) {
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
@@ -18,7 +19,7 @@ export function useBookmarks(isAuthenticated: boolean) {
     setLoading(true);
     setError(null);
     try {
-      const bookmarks = await fetchBookmarks();
+      const bookmarks = ensureArray(await fetchBookmarks());
       setSavedTools(bookmarks);
       setBookmarkedIds(bookmarks.map((t) => t.id));
     } catch (err) {

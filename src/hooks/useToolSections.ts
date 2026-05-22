@@ -14,7 +14,7 @@ interface UseToolSectionsOptions {
 }
 
 /** Derive section lists from one catalog fetch — no extra API calls */
-export function useToolSections(tools: AITool[]) {
+export function useToolSections(tools: AITool[] | null | undefined) {
   const homeSections = useMemo(() => getHomeToolSections(tools), [tools]);
 
   const getFiltered = useMemo(

@@ -88,7 +88,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
                 onClick={onClose}
                 className="p-2 bg-white/80 border border-slate-200 text-slate-500 hover:text-slate-900 rounded-xl transition"
               >
-                <LucideIcon name="X" className="w-4 h-4" />
+                <LucideIcon name="Close" className="w-4 h-4" />
               </button>
             </div>
 

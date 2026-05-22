@@ -5,6 +5,7 @@ import { fetchToolBySlug } from '../lib/api';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { LucideIcon } from '../components/LucideIcon';
 import { openToolWebsite, getValidToolUrl } from '../lib/toolUrl';
+import { ensureArray } from '../lib/safeArray';
 import { paths, navigate, categoriesIndexPath } from '../lib/router';
 
 interface ToolPageProps {
@@ -97,6 +98,7 @@ export function ToolPage({
   }
 
   const isBookmarked = bookmarkedIds.includes(tool.id);
+  const tags = ensureArray<string>(tool.tags);
 
   return (
     <motion.div
@@ -150,7 +152,7 @@ export function ToolPage({
           <p className="text-slate-600 leading-relaxed mt-6 text-base">{tool.description}</p>
 
           <div className="flex flex-wrap gap-2 mt-6">
-            {tool.tags.map((tag) => (
+            {tags.map((tag) => (
               <span key={tag} className="text-xs px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-slate-600">
                 {tag}
               </span>

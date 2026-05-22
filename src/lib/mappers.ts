@@ -1,6 +1,7 @@
 import { AITool, Category, ToolSubmission } from '../types';
 import type { Database } from './database.types';
 import { faviconFromUrl } from '../data/catalogHelpers';
+import { ensureArray } from './safeArray';
 
 type ToolRow = Database['public']['Tables']['tools']['Row'];
 type CategoryRow = Database['public']['Tables']['categories']['Row'];
@@ -17,7 +18,7 @@ export function mapToolFromDb(row: ToolRow): AITool {
     url: row.url,
     category: row.category_id,
     subCategory: row.sub_category ?? undefined,
-    tags: row.tags ?? [],
+    tags: ensureArray<string>(row.tags),
     votes: row.votes,
     bookmarks: row.bookmarks_count,
     pricing: row.pricing,
@@ -26,7 +27,7 @@ export function mapToolFromDb(row: ToolRow): AITool {
     isTrending: row.is_trending,
     isFeatured: row.is_featured,
     addedAt: row.created_at,
-    features: row.features ?? [],
+    features: ensureArray<string>(row.features),
   };
 }
 

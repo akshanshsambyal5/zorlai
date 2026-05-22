@@ -31,7 +31,7 @@ import {
   Send,
   HelpCircle,
   Menu,
-  X,
+  X as CloseIcon,
   Sparkle,
   LogOut,
   LogIn,
@@ -42,7 +42,10 @@ import {
   Lock,
 } from 'lucide-react';
 
-const iconsMap: Record<string, React.ComponentType<{ className?: string }>> = {
+type IconComponent = React.ComponentType<{ className?: string }>;
+
+/** Use "Close" not "X" — avoids collisions with the Lucide X component in lookups. */
+const iconsMap: Record<string, IconComponent> = {
   Code2,
   Sparkles,
   Video,
@@ -74,7 +77,8 @@ const iconsMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Send,
   HelpCircle,
   Menu,
-  X,
+  Close: CloseIcon,
+  X: CloseIcon,
   Sparkle,
   LogOut,
   LogIn,
@@ -92,6 +96,7 @@ interface LucideIconProps {
 }
 
 export function LucideIcon({ name, className, fallback = 'Sparkles' }: LucideIconProps) {
-  const IconComponent = iconsMap[name] || iconsMap[fallback] || Sparkles;
+  const IconComponent =
+    iconsMap[name] ?? iconsMap[fallback] ?? Sparkles;
   return <IconComponent className={className} />;
 }

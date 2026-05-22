@@ -1,4 +1,10 @@
 import { AITool } from '../types';
+import { ensureArray } from './safeArray';
+import { normalizeTool } from './normalizeTool';
+
+function asToolList(tools: AITool[] | null | undefined): AITool[] {
+  return ensureArray<AITool>(tools).map((t) => normalizeTool(t));
+}
 
 export type ToolsListMode = 'all' | 'trending' | 'new' | 'popular' | 'search';
 
@@ -23,8 +29,9 @@ export function popularScore(tool: AITool): number {
 }
 
 function applyPricingFilter(tools: AITool[], pricing?: string): AITool[] {
-  if (!pricing || pricing === 'All') return tools;
-  return tools.filter((t) => t.pricing === pricing);
+  const list = asToolList(tools);
+  if (!pricing || pricing === 'All') return list;
+  return list.filter((t) => t.pricing === pricing);
 }
 
 function applySearchFilter(tools: AITool[], search?: string): AITool[] {
@@ -46,25 +53,25 @@ function excludeIds(tools: AITool[], ids: Set<string>): AITool[] {
 }
 
 export function getTrendingTools(tools: AITool[], limit = LIST_PAGE_DEFAULT_LIMIT): AITool[] {
-  return [...tools]
+  return [...asToolList(tools)]
     .sort((a, b) => trendingScore(b) - trendingScore(a))
     .slice(0, limit);
 }
 
 export function getNewTools(tools: AITool[], limit = LIST_PAGE_DEFAULT_LIMIT): AITool[] {
-  return [...tools]
+  return [...asToolList(tools)]
     .sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
     .slice(0, limit);
 }
 
 export function getPopularTools(tools: AITool[], limit = LIST_PAGE_DEFAULT_LIMIT): AITool[] {
-  return [...tools]
+  return [...asToolList(tools)]
     .sort((a, b) => popularScore(b) - popularScore(a))
     .slice(0, limit);
 }
 
 export function getExploreTools(tools: AITool[]): AITool[] {
-  return [...tools].sort((a, b) => a.name.localeCompare(b.name));
+  return [...asToolList(tools)].sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export interface HomeToolSections {
@@ -74,10 +81,11 @@ export interface HomeToolSections {
 }
 
 /** Home page previews — no duplicate cards across sections */
-export function getHomeToolSections(tools: AITool[], limit = SECTION_PREVIEW_LIMIT): HomeToolSections {
+export function getHomeToolSections(tools: AITool[] | null | undefined, limit = SECTION_PREVIEW_LIMIT): HomeToolSections {
+  const pool = asToolList(tools);
   const used = new Set<string>();
 
-  const trending = getTrendingTools(tools, limit * 3)
+  const trending = getTrendingTools(pool, limit * 3)
     .filter((t) => {
       if (used.has(t.id)) return false;
       used.add(t.id);
@@ -85,11 +93,11 @@ export function getHomeToolSections(tools: AITool[], limit = SECTION_PREVIEW_LIM
     })
     .slice(0, limit);
 
-  const newPool = excludeIds(getNewTools(tools, limit * 4), used);
+  const newPool = excludeIds(getNewTools(pool, limit * 4), used);
   const newest = newPool.slice(0, limit);
   newest.forEach((t) => used.add(t.id));
 
-  const popularPool = excludeIds(getPopularTools(tools, limit * 4), used);
+  const popularPool = excludeIds(getPopularTools(pool, limit * 4), used);
   const popular = popularPool.slice(0, limit);
   popular.forEach((t) => used.add(t.id));
 
@@ -97,11 +105,11 @@ export function getHomeToolSections(tools: AITool[], limit = SECTION_PREVIEW_LIM
 }
 
 export function filterTools(
-  tools: AITool[],
+  tools: AITool[] | null | undefined,
   mode: ToolsListMode,
   options?: { search?: string; pricing?: string; limit?: number }
 ): AITool[] {
-  let result = applyPricingFilter(tools, options?.pricing);
+  let result = applyPricingFilter(asToolList(tools), options?.pricing);
 
   switch (mode) {
     case 'trending':

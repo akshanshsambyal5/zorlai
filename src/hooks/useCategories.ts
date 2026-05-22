@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Category } from '../types';
 import { ApiError, fetchCategories } from '../lib/api';
+import { ensureArray } from '../lib/safeArray';
 
 export function useCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -12,7 +13,7 @@ export function useCategories() {
     setError(null);
     try {
       const data = await fetchCategories();
-      setCategories(data);
+      setCategories(ensureArray(data));
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Failed to load categories');
       setCategories([]);

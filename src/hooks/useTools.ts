@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AITool } from '../types';
 import { ApiError, fetchTools, fetchToolBySlug, voteTool, ToolsQuery } from '../lib/api';
+import { ensureArray } from '../lib/safeArray';
 
 export function useTools(query: ToolsQuery = {}) {
   const [tools, setTools] = useState<AITool[]>([]);
@@ -12,7 +13,7 @@ export function useTools(query: ToolsQuery = {}) {
     setError(null);
     try {
       const data = await fetchTools(query);
-      setTools(data);
+      setTools(ensureArray<AITool>(data));
     } catch (err) {
       const message = err instanceof ApiError ? err.message : 'Failed to load tools';
       setError(message);

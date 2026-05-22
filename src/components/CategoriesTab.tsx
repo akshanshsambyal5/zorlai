@@ -3,6 +3,7 @@ import { CategoryCard } from './categories/CategoryCard';
 import { ScrollReveal } from './ui/ScrollReveal';
 import { categoriesIndexPath, navigate } from '../lib/router';
 import { MagneticButton } from './ui/MagneticButton';
+import { ensureArray } from '../lib/safeArray';
 
 interface CategoriesTabProps {
   categories: Category[];
@@ -12,7 +13,7 @@ interface CategoriesTabProps {
 
 export function CategoriesTab({ categories, tools, toolsCountByCategory }: CategoriesTabProps) {
   const trendingByCategory: Record<string, number> = {};
-  for (const t of tools) {
+  for (const t of ensureArray(tools)) {
     if (t.isTrending || t.votes > 300) {
       trendingByCategory[t.category] = (trendingByCategory[t.category] || 0) + 1;
     }

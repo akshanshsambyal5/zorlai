@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AITool } from '../types';
 import { ApiError, fetchLikedTools } from '../lib/api';
+import { ensureArray } from '../lib/safeArray';
 
 export function useLikedTools(isAuthenticated: boolean) {
   const [likedTools, setLikedTools] = useState<AITool[]>([]);
@@ -17,7 +18,7 @@ export function useLikedTools(isAuthenticated: boolean) {
     setError(null);
     try {
       const tools = await fetchLikedTools();
-      setLikedTools(tools);
+      setLikedTools(ensureArray(tools));
     } catch (err) {
       if (err instanceof ApiError && err.status === 401) {
         setLikedTools([]);

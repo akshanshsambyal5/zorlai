@@ -6,6 +6,7 @@ import { LucideIcon } from '../components/LucideIcon';
 import { ScrollReveal } from '../components/ui/ScrollReveal';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { categoriesIndexPath } from '../lib/router';
+import { ensureArray } from '../lib/safeArray';
 
 interface CategoriesIndexPageProps {
   categories: Category[];
@@ -33,7 +34,7 @@ export function CategoriesIndexPage({
   const stats = useMemo(() => {
     const counts: Record<string, number> = {};
     const trending: Record<string, number> = {};
-    for (const t of tools) {
+    for (const t of ensureArray(tools)) {
       counts[t.category] = (counts[t.category] || 0) + 1;
       if (t.isTrending || t.votes > 300) {
         trending[t.category] = (trending[t.category] || 0) + 1;
@@ -42,7 +43,7 @@ export function CategoriesIndexPage({
     return { counts, trending };
   }, [tools]);
 
-  const totalTools = tools.length;
+  const totalTools = ensureArray(tools).length;
 
   return (
     <div className="pt-24 pb-16 px-4 sm:px-6">

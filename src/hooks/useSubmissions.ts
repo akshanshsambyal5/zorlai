@@ -7,6 +7,7 @@ import {
   rejectSubmission,
   submitTool,
 } from '../lib/api';
+import { ensureArray } from '../lib/safeArray';
 
 export function useSubmissions(isAuthenticated: boolean, isAdmin: boolean) {
   const [submissions, setSubmissions] = useState<ToolSubmission[]>([]);
@@ -23,7 +24,7 @@ export function useSubmissions(isAuthenticated: boolean, isAdmin: boolean) {
     setError(null);
     try {
       const data = await fetchSubmissions();
-      setSubmissions(data);
+      setSubmissions(ensureArray(data));
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Failed to load submissions');
     } finally {

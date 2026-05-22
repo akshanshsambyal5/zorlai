@@ -129,7 +129,7 @@ export function AIScout({ isOpen, onClose, onSelectTool }: AIScoutProps) {
                 onClick={onClose}
                 className="p-2 bg-white/5 border border-white/5 hover:border-white/10 text-slate-400 hover:text-white rounded-xl transition"
               >
-                <LucideIcon name="X" className="w-3.5 h-3.5" />
+                <LucideIcon name="Close" className="w-3.5 h-3.5" />
               </button>
             </div>
 

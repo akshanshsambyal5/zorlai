@@ -7,6 +7,7 @@ import { getCategoryVisual } from '../lib/categoryVisuals';
 import { CategoryToolsGrid } from '../components/categories/CategoryToolsGrid';
 import { LucideIcon } from '../components/LucideIcon';
 import { categoriesIndexPath, categoryPath } from '../lib/router';
+import { ensureArray } from '../lib/safeArray';
 
 interface CategoryPageProps {
   slug: string;
@@ -42,14 +43,16 @@ export function CategoryPage({
     pricing: selectedPricing,
   });
 
+  const safeTools = ensureArray<AITool>(tools);
+
   const displayedTools = useMemo(() => {
-    if (!showTrendingOnly) return tools;
-    return tools.filter((t) => t.isTrending || t.votes > 300);
-  }, [tools, showTrendingOnly]);
+    if (!showTrendingOnly) return safeTools;
+    return safeTools.filter((t) => t.isTrending || t.votes > 300);
+  }, [safeTools, showTrendingOnly]);
 
   const trendingCount = useMemo(
-    () => tools.filter((t) => t.isTrending || t.votes > 300).length,
-    [tools]
+    () => safeTools.filter((t) => t.isTrending || t.votes > 300).length,
+    [safeTools]
   );
 
   const origin = typeof window !== 'undefined' ? window.location.origin : '';

@@ -130,7 +130,7 @@ export function Navbar({
               <LucideIcon name="Sparkles" className="w-4 h-4" />
             </MagneticButton>
             <MagneticButton variant="ghost" strength={0.2} onClick={() => setIsOpen(!isOpen)} className="!p-2.5">
-              <LucideIcon name={isOpen ? 'X' : 'Menu'} className="w-4 h-4" />
+              <LucideIcon name={isOpen ? 'Close' : 'Menu'} className="w-4 h-4" />
             </MagneticButton>
           </div>
         </motion.div>

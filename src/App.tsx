@@ -35,6 +35,7 @@ import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { PageShell } from './components/layout/PageShell';
 import { paths, navTabFromRoute, toolPath } from './lib/router';
+import { ensureArray } from './lib/safeArray';
 
 const AUTH_ROUTES = new Set(['login', 'signup', 'forgot-password', 'reset-password']);
 
@@ -96,7 +97,7 @@ export default function App() {
 
   const allToolsForLookup = useMemo(() => {
     const map = new Map<string, AITool>();
-    for (const t of catalogTools) map.set(t.id, t);
+    for (const t of ensureArray<AITool>(catalogTools)) map.set(t.id, t);
     return map;
   }, [catalogTools]);
 

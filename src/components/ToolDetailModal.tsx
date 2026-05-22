@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { AITool } from '../types';
 import { LucideIcon } from './LucideIcon';
 import { getValidToolUrl } from '../lib/toolUrl';
+import { ensureArray } from '../lib/safeArray';
 
 interface ToolDetailModalProps {
   tool: AITool | null;
@@ -23,6 +24,9 @@ export function ToolDetailModal({
 }: ToolDetailModalProps) {
   const [logoError, setLogoError] = useState(false);
   if (!tool) return null;
+
+  const features = ensureArray<string>(tool.features);
+  const tags = ensureArray<string>(tool.tags);
 
   const launchUrl = getValidToolUrl(tool.url);
 
@@ -58,7 +62,7 @@ export function ToolDetailModal({
                 onClick={onClose}
                 className="p-2 bg-white/5 hover:bg-white/10 border border-white/5 text-slate-400 hover:text-white rounded-xl transition-all duration-200 active:scale-90"
               >
-                <LucideIcon name="X" className="w-4 h-4" />
+                <LucideIcon name="Close" className="w-4 h-4" />
               </button>
             </div>
 
@@ -126,7 +130,7 @@ export function ToolDetailModal({
               <div className="space-y-3">
                 <h4 className="text-xs font-mono uppercase tracking-widest text-slate-400">Core Synthesizer Features</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {tool.features.map((feature, idx) => (
+                  {features.map((feature, idx) => (
                     <div
                       key={idx}
                       className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-950/20 border border-white/5 text-xs text-slate-300 hover:text-white transition-colors duration-200"
@@ -143,7 +147,7 @@ export function ToolDetailModal({
               {/* Subcategorization tags list */}
               <div className="flex flex-wrap gap-2 items-center">
                 <span className="text-xs font-mono text-slate-500">Filters:</span>
-                {tool.tags.map((tag) => (
+                {tags.map((tag) => (
                   <span
                     key={tag}
                     className="text-xs font-mono text-violet-300 bg-violet-600/10 border border-violet-500/20 px-3 py-1 rounded-full"

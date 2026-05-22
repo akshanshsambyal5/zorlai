@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { AITool, Category } from '../../types';
 import { GlassCard } from '../GlassCard';
 import { LucideIcon } from '../LucideIcon';
+import { ensureArray } from '../../lib/safeArray';
 
 interface ToolsGridProps {
   tools: AITool[];
@@ -32,6 +33,8 @@ export function ToolsGrid({
   onOpenToolPage,
   compact = false,
 }: ToolsGridProps) {
+  const safeTools = ensureArray(tools);
+
   if (loading) {
     return (
       <div
@@ -64,7 +67,7 @@ export function ToolsGrid({
     );
   }
 
-  if (tools.length === 0) {
+  if (safeTools.length === 0) {
     return (
       <div className="text-center py-16 glass-panel rounded-2xl max-w-xl mx-auto mx-4">
         <LucideIcon name="Compass" className="w-8 h-8 text-slate-400 mx-auto mb-3" />
@@ -86,7 +89,7 @@ export function ToolsGrid({
       transition={{ duration: 0.7, ease: 'easeOut' }}
       className={gridClass}
     >
-      {tools.map((tool, i) => (
+      {safeTools.map((tool, i) => (
         <motion.div
           key={tool.id}
           className={itemClass}
