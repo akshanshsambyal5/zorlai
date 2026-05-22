@@ -1,0 +1,6 @@
+{
+  "name": "ZorlAI",
+  "description": "Premium futuristic AI tools directory with an intelligent search, category filters, trending tools tracking, cyber blog, and an integrated Gemini-powered AI Assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
